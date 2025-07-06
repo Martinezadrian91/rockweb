@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dato Actualizado</title>
+</head>
+<body>
+    <h1>Estado de Actualización del Dato</h1>
+    <?php
+    $dato_actual = file_get_contents("dato.txt");  // Lee el dato almacenado en dato.txt
+    if ($dato_actual) {
+        echo "<p>Último dato actualizado: $dato_actual</p>";
+    } else {
+        echo "<p>Aún no hay datos actualizados</p>";
+    }
+    ?>
+</body>
+</html>
