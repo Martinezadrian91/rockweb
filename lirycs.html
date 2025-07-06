@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halley Tech Company</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://thumbs.dreamstime.com/b/ci%C3%A9rrese-encima-de-concepto-del-fondo-la-m%C3%BAsica-los-instrumentos-119213604.jpg') no-repeat center center fixed; /* Cambia 'fondo.jpg' por la ruta de tu imagen */
+            background-size: cover;
+        }
+
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100%;
+            background-color: #a46529; /* Color estilo Android */
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            padding: 16px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .menu a:hover {
+            background-color: #6b390a; /* Color más oscuro al pasar el ratón */
+        }
+
+        .content {
+            margin-left: 220px; /* Espacio para el menú */
+            padding: 20px;
+        }
+
+        h1 {
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: white;
+  font:
+    1.5em Georgia,
+    serif;
+}
+	 h3 {
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: black;
+  font:
+    1.5em Georgia,
+    serif;
+}
+	h2 {
+	 text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: white;
+  font:
+    1.5em Georgia,
+    serif;
+	}
+
+   .oculto {
+            display: none;
+        }
+		 
+		
+    </style>
+  
+   
+
+<script>
+    function toggleCajas() {
+        var cajas = document.querySelectorAll('.caja');
+        var mostrarButton = document.getElementById('mostrar-button');
+        var ocultarButton = document.getElementById('ocultar-button');
+
+        var algunoOculto = Array.from(cajas).some(caja => caja.style.display === 'none' || caja.style.display === '');
+
+        cajas.forEach(function(caja) {
+            if (algunoOculto) {
+                caja.style.display = 'block';
+            } else {
+                caja.style.display = 'none';
+            }
+        });
+
+        if (algunoOculto) {
+            mostrarButton.style.display = 'none';
+            ocultarButton.style.display = 'inline-block';
+        } else {
+            mostrarButton.style.display = 'inline-block';
+            ocultarButton.style.display = 'none';
+        }
+    }
+</script>
+
+ 
+
+</head>
+
+
+
+<body>
+    <div class="menu">
+      
+		<a href="https://martinezadrian91.github.io/rockweb/">volver</a>
+       
+    </div>
+
+	
+    <div class="content">
+	
+        <h1>ROCK SERVER</h1>
+       
+        <!-- Aquí puedes agregar más contenido -->
+		
+	<h2>
+	Si recordara ese camino
+<br>	
+Que me trajo a este lugar
+<br>
+¿Volvería a ser tu amigo
+<br>
+Si te cruzo una vez más?
+<br>
+<br>
+
+Si otra sombra va conmigo 
+<br>
+Me tendré que equivocar 
+<br>
+No te asombres del destino
+<br> 
+Nuestros nombres seguirán
+<br>
+<br>
+
+Si todo tiempo transcurrido 
+<br>
+Es principio de un final 
+<br>
+Como gotas que hacen ríos 
+<br>
+Y desembocan en el mar
+<br>
+<br>
+
+más calor no cambia el frio
+<br>
+Ni mas color la oscuridad 
+<br>
+Ya No llores si se han ido 
+<br>
+Los mejor es que pudo pasar 
+<br>
+
+</h2>
+		
+		
+    </div>
+  
+ 
+
+</body>
+
+</html>
