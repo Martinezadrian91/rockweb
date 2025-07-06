@@ -94,7 +94,18 @@
             mostrarButton.style.display = 'inline-block';
             ocultarButton.style.display = 'none';
         }
+if ('serviceWorker' in navigator) {
+    caches.keys().then(function(names) {
+      for (let name of names)
+        caches.delete(name);
+    });
+    navigator.serviceWorker.register('service-worker.js?cacheBust=' + Date.now())
+      .then(reg => console.log('SW registrado'))
+      .catch(err => console.log('SW fallo:', err));
+  }
     }
+
+
 </script>
 
  
