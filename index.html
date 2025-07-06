@@ -2,16 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <!-- Vista adaptable y sin zoom involuntario -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-  <!-- Permite comportamiento de Web App en iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Icono en pantalla de inicio iOS -->
   <link rel="apple-touch-icon" href="icono-192.png">
-  <!-- Tema de color en Android Chrome -->
   <meta name="theme-color" content="#a46529">
-
+  <link rel="manifest" href="manifest.json">
   <title>Rock Server</title>
   <style>
     body {
@@ -60,6 +56,11 @@
     }
   </style>
   <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log('Service Worker registrado'))
+        .catch(err => console.log('Error al registrar SW:', err));
+    }
     function toggleCajas() {
       const cajas = document.querySelectorAll('.caja');
       const showBtn = document.getElementById('mostrar-button');
@@ -80,24 +81,15 @@
     <a href="https://drive.google.com/drive/folders/1m5BqDZJdgNe9ynMn4IRU-23Vckw8gJ8W?usp=drive_link">Amplitube</a>
     <a href="https://drive.google.com/file/d/1BgjvtN59IbwwHHgU2mRlVsceWEfpDVgF/view?usp=sharing">Parche</a>
   </div>
- <div class="content">
-	
+   <div class="content">
         <h1>ROCK SERVER</h1>
-       
-        <!-- Aquí puedes agregar más contenido -->
-		<div class="caja oculto">
-		<h3>Sultans 12</h3>
-		
-		<iframe src="https://drive.google.com/file/d/1r5q55V06G5g1qEunu5kkPo_R73GjKCvU/preview" width="440" height="80" allow="autoplay">
-		Sultans 12
-		</iframe>
-		<br>
-		<h3>Base de bteria</h3>
-		<iframe src="https://drive.google.com/file/d/1-6Ae8g24XnChGCRjI3t2T1C83qDqtLHL/preview" width="440" height="80" allow="autoplay">
-		Sultans 12
-		</iframe>
-		
-		</div>
+        <div class="caja oculto">
+          <h3>Sultans 12</h3>
+          <iframe src="https://drive.google.com/file/d/1r5q55V06G5g1qEunu5kkPo_R73GjKCvU/preview" width="440" height="80" allow="autoplay"></iframe>
+          <br>
+          <h3>Base de batería</h3>
+          <iframe src="https://drive.google.com/file/d/1-6Ae8g24XnChGCRjI3t2T1C83qDqtLHL/preview" width="440" height="80" allow="autoplay"></iframe>
+        </div>
   </div>
 </body>
 </html>
