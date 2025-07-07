@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halley Tech Company</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://thumbs.dreamstime.com/b/ci%C3%A9rrese-encima-de-concepto-del-fondo-la-m%C3%BAsica-los-instrumentos-119213604.jpg') no-repeat center center fixed; /* Cambia 'fondo.jpg' por la ruta de tu imagen */
+            background-size: cover;
+        }
+
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100%;
+            background-color: #a46529; /* Color estilo Android */
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            padding: 16px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .menu a:hover {
+            background-color: #6b390a; /* Color más oscuro al pasar el ratón */
+        }
+
+        .content {
+            margin-left: 110px; /* Espacio para el menú */
+            padding: 20px;
+        }
+
+        h1 {
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: white;
+  font:
+    1.5em Georgia,
+    serif;
+}
+h3 {
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: black;
+  font-size: 1em;
+  font-family: Georgia, serif;
+}
+	h2 {
+	 text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: white;
+  font:
+    1.5em Georgia,
+    serif;
+	}
+
+   .oculto {
+            display: none;
+        }
+		 
+		
+    </style>
+  
+   
+
+<script>
+    function toggleCajas() {
+        var cajas = document.querySelectorAll('.caja');
+        var mostrarButton = document.getElementById('mostrar-button');
+        var ocultarButton = document.getElementById('ocultar-button');
+
+        var algunoOculto = Array.from(cajas).some(caja => caja.style.display === 'none' || caja.style.display === '');
+
+        cajas.forEach(function(caja) {
+            if (algunoOculto) {
+                caja.style.display = 'block';
+            } else {
+                caja.style.display = 'none';
+            }
+        });
+
+        if (algunoOculto) {
+            mostrarButton.style.display = 'none';
+            ocultarButton.style.display = 'inline-block';
+        } else {
+            mostrarButton.style.display = 'inline-block';
+            ocultarButton.style.display = 'none';
+        }
+    }
+</script>
+
+ 
+
+</head>
+
+
+
+<body>
+    <div class="menu">
+      
+		<a href="https://martinezadrian91.github.io/rockweb/">volver</a>
+       
+    </div>
+
+	
+    <div class="content">
+	
+        <h1>Flash 2</h1>
+       
+        <!-- Aquí puedes agregar más contenido -->
+		
+	<h3>
+	Como sigue esa historia 
+	<br>
+Cuando tiran a matar<br>
+Hoy te siguen otras sombras<br>
+Nuevas formas de pensar <br><br>
+
+Ser así, no es normal.<br>
+Un juego fue infantil <br>
+Y otro daño a la moral.<br>
+Te tuviste que reir<br>
+No querias quedar mal.<br>
+Aunque te pudiera herir<br>
+Lo intentas disimular.<br><br>
+
+Te toma por sorpresa<br>
+Una mediada cautelar <br>
+El acuerdo de promesa <br>
+Pone precio a la amistad<br>
+
+O cazas o sos la presa<br>
+El trato sobre la mesa <br>
+Define cómo es la verdad <br>
+Sera contra tu defensa <br>
+Contradecir la autoridad <br><br>
+
+O cazas o sos la presa<br>
+Pero abandonar la mesa<br>
+No es tan simple <br>
+Nada puede ser verdad <br>
+Decir en tu defensa <br><br>
+
+Cuando el pibe no razona<br>
+Eso empieza a hacerte mal<br>
+era actor de una persona <br>
+para poderte conquistar <br>
+
+</h3>
+		
+		
+    </div>
+  
+ 
+
+</body>
+
+</html>
