@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halley Tech Company</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://thumbs.dreamstime.com/b/ci%C3%A9rrese-encima-de-concepto-del-fondo-la-m%C3%BAsica-los-instrumentos-119213604.jpg') no-repeat center center fixed; /* Cambia 'fondo.jpg' por la ruta de tu imagen */
+            background-size: cover;
+        }
+
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100%;
+            background-color: #a46529; /* Color estilo Android */
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            padding: 16px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .menu a:hover {
+            background-color: #6b390a; /* Color más oscuro al pasar el ratón */
+        }
+
+        .content {
+            margin-left: 110px; /* Espacio para el menú */
+            padding: 20px;
+        }
+
+        h1 {
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: white;
+  font:
+    1.5em Georgia,
+    serif;
+}
+h3 {
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: black;
+  font-size: 1em;
+  font-family: Georgia, serif;
+}
+	h2 {
+	 text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: white;
+  font:
+    1.5em Georgia,
+    serif;
+	}
+
+   .oculto {
+            display: none;
+        }
+		 
+		
+    </style>
+  
+   
+
+<script>
+    function toggleCajas() {
+        var cajas = document.querySelectorAll('.caja');
+        var mostrarButton = document.getElementById('mostrar-button');
+        var ocultarButton = document.getElementById('ocultar-button');
+
+        var algunoOculto = Array.from(cajas).some(caja => caja.style.display === 'none' || caja.style.display === '');
+
+        cajas.forEach(function(caja) {
+            if (algunoOculto) {
+                caja.style.display = 'block';
+            } else {
+                caja.style.display = 'none';
+            }
+        });
+
+        if (algunoOculto) {
+            mostrarButton.style.display = 'none';
+            ocultarButton.style.display = 'inline-block';
+        } else {
+            mostrarButton.style.display = 'inline-block';
+            ocultarButton.style.display = 'none';
+        }
+    }
+</script>
+
+ 
+
+</head>
+
+
+
+<body>
+    <div class="menu">
+      
+		<a href="https://martinezadrian91.github.io/rockweb/">volver</a>
+       
+    </div>
+
+	
+    <div class="content">
+	
+        <h1>Flash 2</h1>
+       
+        <!-- Aquí puedes agregar más contenido -->
+		
+	<h3>
+En dos copas sirven risas<br>
+Para calmarla la sed<br>
+es trato firmado con tiza<br>
+que la lluvia borra después <br><br>
+ 
+cuando el destino no perdona<br>
+Y la presa devora al cazador<br>
+no es la fe la que traiciona<br>
+siendo fiel a la oracion<br><br>
+
+No es por ahí <br>
+No hay dias para reir<br>
+Ni tiempo de llorar  <br>
+una hora no es vivír<br>
+y ser no es solo estar<br><br>
+
+una La tarde no se va<br>
+Un recuerdo no es historia <br>
+Todo el mundo es un hogar<br>
+Y todo el suelo es memoria <br><br>
+
+
+Dios de tantos soñadores <br>
+En este espacio sin lugar<br>
+Donde juegan los traidores<br>
+No te olvides de rezar<br><br>
+
+
+</h3>
+		
+		
+    </div>
+  
+ 
+
+</body>
+
+</html>
+
