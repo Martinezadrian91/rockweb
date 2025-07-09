@@ -1,26 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock web Server</title>
-
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: url('https://thumbs.dreamstime.com/b/ci%C3%A9rrese-encima-de-concepto-del-fondo-la-m%C3%BAsica-los-instrumentos-119213604.jpg?v=20250709') no-repeat center center scroll;
+            background: url('https://thumbs.dreamstime.com/b/ci%C3%A9rrese-encima-de-concepto-del-fondo-la-m%C3%BAsica-los-instrumentos-119213604.jpg') no-repeat center center fixed;
             background-size: cover;
         }
-
         .menu {
             position: fixed;
             top: 0;
@@ -32,7 +22,6 @@
             box-shadow: 2px 0 5px rgba(0,0,0,0.3);
             z-index: 1000;
         }
-
         .menu a {
             display: block;
             color: white;
@@ -40,97 +29,131 @@
             text-decoration: none;
             font-size: 18px;
         }
-
         .menu a:hover {
             background-color: #6b390a;
         }
-
         .content {
-            margin-left: 220px;
+            margin-left: 120px;
             padding: 20px;
         }
-
+        h1, h3 {
+            text-shadow: 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em blue;
+        }
         h1 {
-            text-shadow: 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em blue;
             color: white;
-            font-size: 1.5em;
-            font-family: Georgia, serif;
+            font: 1.5em Georgia, serif;
         }
-
         h3 {
-            text-shadow: 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em blue;
             color: black;
-            font-size: 1.5em;
-            font-family: Georgia, serif;
+            font: 1.5em Georgia, serif;
         }
-
         .oculto {
             display: none;
         }
     </style>
-
-    <script>
-        function toggleCajas() {
-            var cajas = document.querySelectorAll('.caja');
-            var mostrarButton = document.getElementById('mostrar-button');
-            var ocultarButton = document.getElementById('ocultar-button');
-
-            var algunoOculto = Array.from(cajas).some(caja => caja.style.display === 'none' || caja.style.display === '');
-
-            cajas.forEach(function(caja) {
-                if (algunoOculto) {
-                    caja.style.display = 'block';
-                } else {
-                    caja.style.display = 'none';
-                }
-            });
-
-            if (algunoOculto) {
-                mostrarButton.style.display = 'none';
-                ocultarButton.style.display = 'inline-block';
-            } else {
-                mostrarButton.style.display = 'inline-block';
-                ocultarButton.style.display = 'none';
-            }
-
-            if ('serviceWorker' in navigator) {
-                caches.keys().then(function(names) {
-                    for (let name of names)
-                        caches.delete(name);
-                });
-                navigator.serviceWorker.register('service-worker.js?cacheBust=' + Date.now())
-                    .then(reg => console.log('SW registrado'))
-                    .catch(err => console.log('SW fallo:', err));
-            }
-        }
-    </script>
 </head>
-
 <body>
     <div class="menu">
         <a href="#home">Inicio</a>
         <a href="https://drive.google.com/drive/folders/1jUfnagDgxeeDm6e2eeg_dzm6ZVQh43CF?usp=drive_link">Drive</a>
         <a id="mostrar-button" onclick="toggleCajas()">Maquetas</a>
-        <a id="ocultar-button" onclick="toggleCajas()" style="display: none;">Ocultar</a>
+        <a id="ocultar-button" onclick="toggleCajas()" style="display: none;">Maquetas</a>
         <a href="https://drive.google.com/drive/folders/1m5BqDZJdgNe9ynMn4IRU-23Vckw8gJ8W?usp=drive_link">Amplitube</a>
         <a href="https://drive.google.com/file/d/1BgjvtN59IbwwHHgU2mRlVsceWEfpDVgF/view?usp=sharing">Parche</a>
         <a href="lirycs.html">letras</a>
-        <a href="minilab.html">Mini Lab</a>
+        <a href="#minilab" onclick="mostrarMiniLab()">Mini Lab</a>
     </div>
 
     <div class="content">
         <h1>ROCK SERVER</h1>
-
         <div class="caja oculto">
             <h3>Base de batería</h3>
             <iframe src="https://drive.google.com/file/d/1-6Ae8g24XnChGCRjI3t2T1C83qDqtLHL/preview" width="440" height="80" allow="autoplay"></iframe>
-            <br>
             <h3>Sultans 12</h3>
             <iframe src="https://drive.google.com/file/d/1r5q55V06G5g1qEunu5kkPo_R73GjKCvU/preview" width="440" height="80" allow="autoplay"></iframe>
-            <br>
             <h3>Progresión en C mayor</h3>
             <iframe src="https://drive.google.com/file/d/1GCtbiLHbw4IWcY1Ko2ZbNjCrE5yOg10X/preview" width="440" height="80" allow="autoplay"></iframe>
         </div>
     </div>
+
+    <div id="minilab" class="content oculto">
+        <h1>🎛️ Mini Lab de Progresiones</h1>
+        <p>Seleccioná acordes para experimentar progresiones modales:</p>
+
+        <label for="acorde1">Acorde 1:</label>
+        <select id="acorde1">
+            <option value="A">Am</option><option value="D">Dm</option><option value="E">Em</option>
+            <option value="C">C</option><option value="F">F</option><option value="G">G</option>
+        </select>
+
+        <label for="acorde2">Acorde 2:</label>
+        <select id="acorde2">
+            <option value="A">Am</option><option value="D">Dm</option><option value="E">Em</option>
+            <option value="C">C</option><option value="F">F</option><option value="G">G</option>
+        </select>
+
+        <label for="acorde3">Acorde 3:</label>
+        <select id="acorde3">
+            <option value="A">Am</option><option value="D">Dm</option><option value="E">Em</option>
+            <option value="C">C</option><option value="F">F</option><option value="G">G</option>
+        </select>
+
+        <button onclick="reproducirProgresion()">🎵 Reproducir</button>
+    </div>
+
+    <script>
+        function toggleCajas() {
+            const cajas = document.querySelectorAll('.caja');
+            const mostrarButton = document.getElementById('mostrar-button');
+            const ocultarButton = document.getElementById('ocultar-button');
+            const algunoOculto = Array.from(cajas).some(caja => caja.style.display === 'none' || caja.style.display === '');
+
+            cajas.forEach(caja => caja.style.display = algunoOculto ? 'block' : 'none');
+            mostrarButton.style.display = algunoOculto ? 'none' : 'inline-block';
+            ocultarButton.style.display = algunoOculto ? 'inline-block' : 'none';
+        }
+
+        function mostrarMiniLab() {
+            document.querySelectorAll('.content').forEach(c => c.classList.add('oculto'));
+            document.getElementById('minilab').classList.remove('oculto');
+        }
+
+        function reproducirProgresion() {
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            const acordes = [
+                document.getElementById('acorde1').value,
+                document.getElementById('acorde2').value,
+                document.getElementById('acorde3').value
+            ];
+            let tiempo = context.currentTime;
+
+            acordes.forEach(acorde => {
+                const notas = obtenerNotasDelAcorde(acorde);
+                notas.forEach((nota, i) => {
+                    const osc = context.createOscillator();
+                    const gain = context.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(nota, tiempo);
+                    gain.gain.setValueAtTime(0.3, tiempo);
+                    osc.connect(gain).connect(context.destination);
+                    osc.start(tiempo);
+                    osc.stop(tiempo + 1);
+                });
+                tiempo += 1.5;
+            });
+        }
+
+        function obtenerNotasDelAcorde(nombre) {
+            const notas = {
+                'C': [261.63, 329.63, 392.00], // C major
+                'D': [293.66, 349.23, 440.00], // D minor
+                'E': [329.63, 392.00, 493.88], // E minor
+                'F': [349.23, 440.00, 523.25], // F major
+                'G': [392.00, 493.88, 587.33], // G major
+                'A': [220.00, 261.63, 329.63], // A minor
+            };
+            return notas[nombre] || [];
+        }
+    </script>
 </body>
 </html>
