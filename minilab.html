@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Lab Acordes</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+    }
+    .menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100px;
+      height: 100%;
+      background-color: #a46529;
+      padding-top: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    .menu a {
+      display: block;
+      color: white;
+      padding: 16px;
+      text-decoration: none;
+      font-size: 18px;
+    }
+    .menu a:hover {
+      background-color: #6b390a;
+    }
+    .content {
+      margin-left: 120px;
+      padding: 20px;
+    }
+    .oculto { display: none; }
+    label, select, button {
+      font-size: 1em;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu">
+    <a href="index.html" onclick="mostrarMiniLab()">Atras</a>
+  </div>
+
+  <div class="content" id="minilab">
+    <h1>🎶 Mini Lab de Progresiones y Modos</h1>
+
+    <label for="tonalidad">Tonalidad:</label>
+    <select id="tonalidad" onchange="actualizarAcordes()">
+      <option value="C">C</option><option value="D">D</option><option value="E">E</option>
+      <option value="F">F</option><option value="G">G</option><option value="A">A</option>
+      <option value="B">B</option>
+    </select>
+
+    <label for="modo">Modo:</label>
+    <select id="modo" onchange="actualizarAcordes()">
+      <option value="ionico">Jónico</option>
+      <option value="dorico">Dórico</option>
+      <option value="frigio">Frigio</option>
+      <option value="lidio">Lidio</option>
+      <option value="mixolidio">Mixolidio</option>
+      <option value="eolico">Eólico</option>
+      <option value="locrio">Locrio</option>
+    </select>
+
+    <h3>Seleccioná acordes:</h3>
+    <div id="acordesContainer"></div>
+
+    <button onclick="agregarAcorde()">➕ Agregar Acorde</button>
+    <button onclick="reproducirProgresion()">▶ Reproducir Progresión</button>
+  </div>
+
+  <script>
+    const modos = {
+      ionico:  ["maj", "min", "min", "maj", "maj", "min", "dim"],
+      dorico:  ["min", "min", "maj", "maj", "min", "dim", "maj"],
+      frigio:  ["min", "maj", "maj", "min", "dim", "maj", "min"],
+      lidio:   ["maj", "maj", "min", "dim", "maj", "min", "min"],
+      mixolidio:["maj", "min", "dim", "maj", "min", "min", "maj"],
+      eolico:  ["min", "dim", "maj", "min", "min", "maj", "maj"],
+      locrio:  ["dim", "maj", "min", "min", "maj", "maj", "min"]
+    };
+
+    const notasBase = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+    function actualizarAcordes() {
+      const tonalidad = document.getElementById('tonalidad').value;
+      const modo = document.getElementById('modo').value;
+      const container = document.getElementById('acordesContainer');
+      container.innerHTML = '';
+      for (let i = 0; i < 4; i++) agregarAcorde();
+    }
+
+    function agregarAcorde() {
+      const tonalidad = document.getElementById('tonalidad').value;
+      const modo = document.getElementById('modo').value;
+      const idx = notasBase.indexOf(tonalidad);
+      const container = document.getElementById('acordesContainer');
+      const select = document.createElement('select');
+
+      for (let i = 0; i < 7; i++) {
+        let nota = notasBase[(idx + [0,2,4,5,7,9,11][i]) % 12];
+        let tipo = modos[modo][i];
+        let nombre = tipo === 'maj' ? nota : tipo === 'min' ? nota + 'm' : nota + 'dim';
+        let opt = document.createElement('option');
+        opt.value = nombre;
+        opt.textContent = nombre;
+        select.appendChild(opt);
+      }
+      container.appendChild(select);
+    }
+
+    function reproducirProgresion() {
+      const acordes = Array.from(document.getElementById('acordesContainer').querySelectorAll('select')).map(sel => sel.value);
+      const context = new (window.AudioContext || window.webkitAudioContext)();
+      let tiempo = context.currentTime;
+
+      acordes.forEach(acorde => {
+        const notas = obtenerNotasDelAcorde(acorde);
+        notas.forEach(nota => {
+          const osc = context.createOscillator();
+          const gain = context.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(nota, tiempo);
+          gain.gain.setValueAtTime(0.3, tiempo);
+          osc.connect(gain).connect(context.destination);
+          osc.start(tiempo);
+          osc.stop(tiempo + 1);
+        });
+        tiempo += 1.5;
+      });
+    }
+
+    function obtenerNotasDelAcorde(nombre) {
+      const baseFreqs = {
+        C: 261.63, 'C#': 277.18, D: 293.66, 'D#': 311.13,
+        E: 329.63, F: 349.23, 'F#': 369.99, G: 392.00,
+        'G#': 415.30, A: 440.00, 'A#': 466.16, B: 493.88
+      };
+      const raiz = nombre.replace(/m|dim/, '');
+      const tipo = nombre.includes('dim') ? 'dim' : nombre.includes('m') ? 'min' : 'maj';
+      const f = baseFreqs[raiz];
+      if (!f) return [];
+
+      switch(tipo) {
+        case 'maj': return [f, f * 1.26, f * 1.5];
+        case 'min': return [f, f * 1.2, f * 1.5];
+        case 'dim': return [f, f * 1.19, f * 1.41];
+        default: return [];
+      }
+    }
+
+    function mostrarMiniLab() {
+      document.querySelectorAll('.content').forEach(c => c.classList.add('oculto'));
+      document.getElementById('minilab').classList.remove('oculto');
+    }
+
+    actualizarAcordes();
+  </script>
+</body>
+</html>
