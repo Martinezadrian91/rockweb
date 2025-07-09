@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <title>Rock web Server</title>
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: url('https://thumbs.dreamstime.com/b/ci%C3%A9rrese-encima-de-concepto-del-fondo-la-m%C3%BAsica-los-instrumentos-119213604.jpg') no-repeat center center fixed; /* Cambia 'fondo.jpg' por la ruta de tu imagen */
+            background: url('https://thumbs.dreamstime.com/b/ci%C3%A9rrese-encima-de-concepto-del-fondo-la-m%C3%BAsica-los-instrumentos-119213604.jpg?v=20250709') no-repeat center center scroll;
             background-size: cover;
         }
 
@@ -18,7 +27,7 @@
             left: 0;
             width: 100px;
             height: 100%;
-            background-color: #a46529; /* Color estilo Android */
+            background-color: #a46529;
             padding-top: 20px;
             box-shadow: 2px 0 5px rgba(0,0,0,0.3);
             z-index: 1000;
@@ -33,124 +42,94 @@
         }
 
         .menu a:hover {
-            background-color: #6b390a; /* Color más oscuro al pasar el ratón */
+            background-color: #6b390a;
         }
 
         .content {
-            margin-left: 220px; /* Espacio para el menú */
+            margin-left: 220px;
             padding: 20px;
         }
 
         h1 {
-  text-shadow:
-    1px 1px 2px black,
-    0 0 1em blue,
-    0 0 0.2em blue;
-  color: white;
-  font:
-    1.5em Georgia,
-    serif;
-}
-	 h3 {
-  text-shadow:
-    1px 1px 2px black,
-    0 0 1em blue,
-    0 0 0.2em blue;
-  color: black;
-  font:
-    1.5em Georgia,
-    serif;
-}
+            text-shadow: 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em blue;
+            color: white;
+            font-size: 1.5em;
+            font-family: Georgia, serif;
+        }
 
-   .oculto {
+        h3 {
+            text-shadow: 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em blue;
+            color: black;
+            font-size: 1.5em;
+            font-family: Georgia, serif;
+        }
+
+        .oculto {
             display: none;
         }
-		 
-		
     </style>
-  
-   
 
-<script>
-    function toggleCajas() {
-        var cajas = document.querySelectorAll('.caja');
-        var mostrarButton = document.getElementById('mostrar-button');
-        var ocultarButton = document.getElementById('ocultar-button');
+    <script>
+        function toggleCajas() {
+            var cajas = document.querySelectorAll('.caja');
+            var mostrarButton = document.getElementById('mostrar-button');
+            var ocultarButton = document.getElementById('ocultar-button');
 
-        var algunoOculto = Array.from(cajas).some(caja => caja.style.display === 'none' || caja.style.display === '');
+            var algunoOculto = Array.from(cajas).some(caja => caja.style.display === 'none' || caja.style.display === '');
 
-        cajas.forEach(function(caja) {
+            cajas.forEach(function(caja) {
+                if (algunoOculto) {
+                    caja.style.display = 'block';
+                } else {
+                    caja.style.display = 'none';
+                }
+            });
+
             if (algunoOculto) {
-                caja.style.display = 'block';
+                mostrarButton.style.display = 'none';
+                ocultarButton.style.display = 'inline-block';
             } else {
-                caja.style.display = 'none';
+                mostrarButton.style.display = 'inline-block';
+                ocultarButton.style.display = 'none';
             }
-        });
 
-        if (algunoOculto) {
-            mostrarButton.style.display = 'none';
-            ocultarButton.style.display = 'inline-block';
-        } else {
-            mostrarButton.style.display = 'inline-block';
-            ocultarButton.style.display = 'none';
+            if ('serviceWorker' in navigator) {
+                caches.keys().then(function(names) {
+                    for (let name of names)
+                        caches.delete(name);
+                });
+                navigator.serviceWorker.register('service-worker.js?cacheBust=' + Date.now())
+                    .then(reg => console.log('SW registrado'))
+                    .catch(err => console.log('SW fallo:', err));
+            }
         }
-if ('serviceWorker' in navigator) {
-    caches.keys().then(function(names) {
-      for (let name of names)
-        caches.delete(name);
-    });
-    navigator.serviceWorker.register('service-worker.js?cacheBust=' + Date.now())
-      .then(reg => console.log('SW registrado'))
-      .catch(err => console.log('SW fallo:', err));
-  }
-    }
-
-
-</script>
-
- 
-
+    </script>
 </head>
-
-
 
 <body>
     <div class="menu">
         <a href="#home">Inicio</a>
-		<a href="https://drive.google.com/drive/folders/1jUfnagDgxeeDm6e2eeg_dzm6ZVQh43CF?usp=drive_link">Drive</a>
-        <a  id="mostrar-button" onclick="toggleCajas()">Maquetas</a>
-        <a  id="ocultar-button" onclick="toggleCajas()" style="display: none;">Maquetas</a>
-		<a href="https://drive.google.com/drive/folders/1m5BqDZJdgNe9ynMn4IRU-23Vckw8gJ8W?usp=drive_link">Amplitube</a>
+        <a href="https://drive.google.com/drive/folders/1jUfnagDgxeeDm6e2eeg_dzm6ZVQh43CF?usp=drive_link">Drive</a>
+        <a id="mostrar-button" onclick="toggleCajas()">Maquetas</a>
+        <a id="ocultar-button" onclick="toggleCajas()" style="display: none;">Ocultar</a>
+        <a href="https://drive.google.com/drive/folders/1m5BqDZJdgNe9ynMn4IRU-23Vckw8gJ8W?usp=drive_link">Amplitube</a>
         <a href="https://drive.google.com/file/d/1BgjvtN59IbwwHHgU2mRlVsceWEfpDVgF/view?usp=sharing">Parche</a>
-		<a href="lirycs.html">letras</a>
+        <a href="lirycs.html">letras</a>
     </div>
 
-	
     <div class="content">
-	
         <h1>ROCK SERVER</h1>
-       
-        <!-- Aquí puedes agregar más contenido -->
-		<div class="caja oculto">
-		
-		<h3>Base de bteria</h3>
-		<iframe src="https://drive.google.com/file/d/1-6Ae8g24XnChGCRjI3t2T1C83qDqtLHL/preview" width="440" height="80" allow="autoplay">
-		Sultans 12
-		</iframe>
-			
-			<br>
-			<h3>Sultans 12</h3>
-		
-		<iframe src="https://drive.google.com/file/d/1r5q55V06G5g1qEunu5kkPo_R73GjKCvU/preview" width="440" height="80" allow="autoplay">
-		Sultans 12
-		</iframe>
-		<br>
-		<h3>Progresion en C mayor</h3>
-		<iframe src="https://drive.google.com/file/d/1GCtbiLHbw4IWcY1Ko2ZbNjCrE5yOg10X/preview" width="440" height="80" allow="autoplay">
-		
-		</iframe>
-		
-		</div>
+
+        <div class="caja oculto">
+            <h3>Base de batería</h3>
+            <iframe src="https://drive.google.com/file/d/1-6Ae8g24XnChGCRjI3t2T1C83qDqtLHL/preview" width="440" height="80" allow="autoplay"></iframe>
+            <br>
+            <h3>Sultans 12</h3>
+            <iframe src="https://drive.google.com/file/d/1r5q55V06G5g1qEunu5kkPo_R73GjKCvU/preview" width="440" height="80" allow="autoplay"></iframe>
+            <br>
+            <h3>Progresión en C mayor</h3>
+            <iframe src="https://drive.google.com/file/d/1GCtbiLHbw4IWcY1Ko2ZbNjCrE5yOg10X/preview" width="440" height="80" allow="autoplay"></iframe>
+        </div>
     </div>
-   </body>
+</body>
 </html>
