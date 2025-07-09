@@ -45,7 +45,7 @@
 </head>
 <body>
   <div class="menu">
-    <a href="index.html" onclick="mostrarMiniLab()">Atras</a>
+    <a href="index.html">Volver</a>
   </div>
 
   <div class="content" id="minilab">
@@ -69,11 +69,24 @@
       <option value="locrio">Locrio</option>
     </select>
 
+    <label for="instrumento">Instrumento:</label>
+    <select id="instrumento">
+      <option value="sine">Sintetizador</option>
+      <option value="square">Guitarra eléctrica (cuadrada)</option>
+      <option value="triangle">Piano digital (triangular)</option>
+      <option value="sawtooth">Órgano (diente de sierra)</option>
+    </select>
+
     <h3>Seleccioná acordes:</h3>
     <div id="acordesContainer"></div>
 
     <button onclick="agregarAcorde()">➕ Agregar Acorde</button>
     <button onclick="reproducirProgresion()">▶ Reproducir Progresión</button>
+
+    <h3>Base de batería:</h3>
+   <audio id="bateria" controls src="https://martinezadrian91.github.io/rockweb/1739336159272.mp3"></audio>
+
+
   </div>
 
   <script>
@@ -118,15 +131,23 @@
 
     function reproducirProgresion() {
       const acordes = Array.from(document.getElementById('acordesContainer').querySelectorAll('select')).map(sel => sel.value);
+      const instrumento = document.getElementById('instrumento').value;
       const context = new (window.AudioContext || window.webkitAudioContext)();
       let tiempo = context.currentTime;
+
+      const bateria = document.getElementById('bateria');
+      const guitarra = document.getElementById('guitarra');
+      bateria.currentTime = 0;
+      guitarra.currentTime = 0;
+      bateria.play();
+      guitarra.play();
 
       acordes.forEach(acorde => {
         const notas = obtenerNotasDelAcorde(acorde);
         notas.forEach(nota => {
           const osc = context.createOscillator();
           const gain = context.createGain();
-          osc.type = 'sine';
+          osc.type = instrumento; // tipo de oscilador
           osc.frequency.setValueAtTime(nota, tiempo);
           gain.gain.setValueAtTime(0.3, tiempo);
           osc.connect(gain).connect(context.destination);
