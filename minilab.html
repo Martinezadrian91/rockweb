@@ -5,12 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mini Lab Acordes</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: white;
-    }
+       body {
+            margin: 0;
+			text-shadow:
+			1px 1px 2px black,
+			0 0 1em blue,
+			0 0 0.2em blue;
+			color: black;
+			font-size: 1em;
+            font-family: Arial, sans-serif;
+            background: url('https://thumbs.dreamstime.com/b/ci%C3%A9rrese-encima-de-concepto-del-fondo-la-m%C3%BAsica-los-instrumentos-119213604.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
     .menu {
       position: fixed;
       top: 0;
@@ -82,11 +88,10 @@
 
     <button onclick="agregarAcorde()">➕ Agregar Acorde</button>
     <button onclick="reproducirProgresion()">▶ Reproducir Progresión</button>
+    <button onclick="detenerProgresion()">⏹ Detener Progresión</button>
 
     <h3>Base de batería:</h3>
-   <audio id="bateria" controls src="https://martinezadrian91.github.io/rockweb/1739336159272.mp3"></audio>
-
-
+    <audio id="bateria" controls src="https://martinezadrian91.github.io/rockweb/1739336159272.mp3"></audio>
   </div>
 
   <script>
@@ -101,6 +106,9 @@
     };
 
     const notasBase = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+    let context;
+    let osciladores = [];
 
     function actualizarAcordes() {
       const tonalidad = document.getElementById('tonalidad').value;
@@ -129,35 +137,6 @@
       container.appendChild(select);
     }
 
-    function reproducirProgresion() {
-      const acordes = Array.from(document.getElementById('acordesContainer').querySelectorAll('select')).map(sel => sel.value);
-      const instrumento = document.getElementById('instrumento').value;
-      const context = new (window.AudioContext || window.webkitAudioContext)();
-      let tiempo = context.currentTime;
-
-      const bateria = document.getElementById('bateria');
-      const guitarra = document.getElementById('guitarra');
-      bateria.currentTime = 0;
-      guitarra.currentTime = 0;
-      bateria.play();
-      guitarra.play();
-
-      acordes.forEach(acorde => {
-        const notas = obtenerNotasDelAcorde(acorde);
-        notas.forEach(nota => {
-          const osc = context.createOscillator();
-          const gain = context.createGain();
-          osc.type = instrumento; // tipo de oscilador
-          osc.frequency.setValueAtTime(nota, tiempo);
-          gain.gain.setValueAtTime(0.3, tiempo);
-          osc.connect(gain).connect(context.destination);
-          osc.start(tiempo);
-          osc.stop(tiempo + 1);
-        });
-        tiempo += 1.5;
-      });
-    }
-
     function obtenerNotasDelAcorde(nombre) {
       const baseFreqs = {
         C: 261.63, 'C#': 277.18, D: 293.66, 'D#': 311.13,
@@ -177,9 +156,38 @@
       }
     }
 
-    function mostrarMiniLab() {
-      document.querySelectorAll('.content').forEach(c => c.classList.add('oculto'));
-      document.getElementById('minilab').classList.remove('oculto');
+    function reproducirProgresion() {
+      if (!context) context = new (window.AudioContext || window.webkitAudioContext)();
+      detenerProgresion(); // detener si ya hay osciladores activos
+      osciladores = [];
+
+      const acordes = Array.from(document.getElementById('acordesContainer').querySelectorAll('select')).map(sel => sel.value);
+      const instrumento = document.getElementById('instrumento').value;
+      let tiempo = context.currentTime;
+      const duracionAcorde = 4 * 60 / 149; // 1 compás a 149 BPM
+
+      acordes.forEach(acorde => {
+        const notas = obtenerNotasDelAcorde(acorde);
+        notas.forEach(nota => {
+          const osc = context.createOscillator();
+          const gain = context.createGain();
+          osc.type = instrumento;
+          osc.frequency.setValueAtTime(nota, tiempo);
+          gain.gain.setValueAtTime(0.3, tiempo);
+          osc.connect(gain).connect(context.destination);
+          osc.start(tiempo);
+          osc.stop(tiempo + duracionAcorde);
+          osciladores.push(osc);
+        });
+        tiempo += duracionAcorde;
+      });
+    }
+
+    function detenerProgresion() {
+      osciladores.forEach(osc => {
+        try { osc.stop(); } catch (e) {}
+      });
+      osciladores = [];
     }
 
     actualizarAcordes();
