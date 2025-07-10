@@ -1,11 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mini Lab Acordes</title>
   <style>
-       body {
+    body {
             margin: 0;
 			text-shadow:
 			1px 1px 2px black,
@@ -56,14 +57,14 @@
 
   <div class="content" id="minilab">
     <h1>🎶 Mini Lab de Progresiones y Modos</h1>
-
+<br>
     <label for="tonalidad">Tonalidad:</label>
     <select id="tonalidad" onchange="actualizarAcordes()">
       <option value="C">C</option><option value="D">D</option><option value="E">E</option>
       <option value="F">F</option><option value="G">G</option><option value="A">A</option>
       <option value="B">B</option>
     </select>
-
+<br>
     <label for="modo">Modo:</label>
     <select id="modo" onchange="actualizarAcordes()">
       <option value="ionico">Jónico</option>
@@ -74,7 +75,7 @@
       <option value="eolico">Eólico</option>
       <option value="locrio">Locrio</option>
     </select>
-
+<br>
     <label for="instrumento">Instrumento:</label>
     <select id="instrumento">
       <option value="sine">Sintetizador</option>
@@ -83,13 +84,27 @@
       <option value="sawtooth">Órgano (diente de sierra)</option>
     </select>
 
+    <label for="volAcordes">Volumen acordes:</label>
+    <input type="range" id="volAcordes" min="0" max="1" step="0.01" value="0.3">
+<br>
+<label for="progresiones">Progresión sugerida:</label>
+<select id="progresiones" onchange="cargarProgresion()">
+  <option value="">-- Elegí una progresión --</option>
+  <option value="Rock,0,3,4">🎸 Rock: I - IV - V</option>
+  <option value="Pop,0,4,5,3">🎹 Pop: I - V - vi - IV</option>
+  <option value="Jazz,1,4,0">🎷 Jazz: ii - V - I</option>
+  <option value="Blues,0,3,0,4">🎺 Blues: I - IV - I - V</option>
+  <option value="Clasico,0,5,3,4">🎻 Clásico: I - vi - IV - V</option>
+</select>
+
+<br>
     <h3>Seleccioná acordes:</h3>
     <div id="acordesContainer"></div>
 
     <button onclick="agregarAcorde()">➕ Agregar Acorde</button>
     <button onclick="reproducirProgresion()">▶ Reproducir Progresión</button>
     <button onclick="detenerProgresion()">⏹ Detener Progresión</button>
-
+<br>
     <h3>Base de batería:</h3>
     <audio id="bateria" controls src="https://martinezadrian91.github.io/rockweb/1739336159272.mp3"></audio>
   </div>
@@ -109,6 +124,35 @@
 
     let context;
     let osciladores = [];
+
+function cargarProgresion() {
+  const seleccion = document.getElementById('progresiones').value;
+  const container = document.getElementById('acordesContainer');
+  container.innerHTML = '';
+
+  if (!seleccion) return;
+
+  const partes = seleccion.split(',');
+  const nombre = partes[0]; // (no lo usamos aún)
+  const grados = partes.slice(1).map(Number);
+
+  const tonalidad = document.getElementById('tonalidad').value;
+  const modo = document.getElementById('modo').value;
+  const idx = notasBase.indexOf(tonalidad);
+
+  grados.forEach(i => {
+    const select = document.createElement('select');
+    let nota = notasBase[(idx + [0,2,4,5,7,9,11][i]) % 12];
+    let tipo = modos[modo][i];
+    let nombre = tipo === 'maj' ? nota : tipo === 'min' ? nota + 'm' : nota + 'dim';
+    let opt = document.createElement('option');
+    opt.value = nombre;
+    opt.textContent = nombre;
+    select.appendChild(opt);
+    container.appendChild(select);
+  });
+}
+
 
     function actualizarAcordes() {
       const tonalidad = document.getElementById('tonalidad').value;
@@ -147,7 +191,6 @@
       const tipo = nombre.includes('dim') ? 'dim' : nombre.includes('m') ? 'min' : 'maj';
       const f = baseFreqs[raiz];
       if (!f) return [];
-
       switch(tipo) {
         case 'maj': return [f, f * 1.26, f * 1.5];
         case 'min': return [f, f * 1.2, f * 1.5];
@@ -158,22 +201,31 @@
 
     function reproducirProgresion() {
       if (!context) context = new (window.AudioContext || window.webkitAudioContext)();
-      detenerProgresion(); // detener si ya hay osciladores activos
+      detenerProgresion();
       osciladores = [];
-
       const acordes = Array.from(document.getElementById('acordesContainer').querySelectorAll('select')).map(sel => sel.value);
       const instrumento = document.getElementById('instrumento').value;
+      const vol = parseFloat(document.getElementById('volAcordes').value);
       let tiempo = context.currentTime;
-      const duracionAcorde = 4 * 60 / 149; // 1 compás a 149 BPM
-
+      const duracionAcorde = 4 * 60 / 149;
       acordes.forEach(acorde => {
         const notas = obtenerNotasDelAcorde(acorde);
         notas.forEach(nota => {
           const osc = context.createOscillator();
           const gain = context.createGain();
+          const lfo = context.createOscillator();
+          const lfoGain = context.createGain();
           osc.type = instrumento;
           osc.frequency.setValueAtTime(nota, tiempo);
-          gain.gain.setValueAtTime(0.3, tiempo);
+          lfo.frequency.value = 5;
+          lfoGain.gain.value = 2;
+          lfo.connect(lfoGain);
+          lfoGain.connect(osc.frequency);
+          lfo.start(tiempo);
+          osc.detune.value = Math.random() * 6 - 3;
+          gain.gain.setValueAtTime(0, tiempo);
+          gain.gain.linearRampToValueAtTime(vol, tiempo + 0.1);
+          gain.gain.linearRampToValueAtTime(0, tiempo + duracionAcorde);
           osc.connect(gain).connect(context.destination);
           osc.start(tiempo);
           osc.stop(tiempo + duracionAcorde);
@@ -184,9 +236,7 @@
     }
 
     function detenerProgresion() {
-      osciladores.forEach(osc => {
-        try { osc.stop(); } catch (e) {}
-      });
+      osciladores.forEach(osc => { try { osc.stop(); } catch (e) {} });
       osciladores = [];
     }
 
