@@ -110,7 +110,7 @@
 <body>
   <div class="menu">
     <a href="index.html">Volver</a>
-<a onclick="mostrarAyuda()">¿Cómo usar?</a>
+<a href="como.html">¿Cómo usar?</a>
   </div>
 
   <div class="content" id="minilab">
@@ -288,35 +288,9 @@
       osciladores.forEach(osc => { try { osc.stop(); } catch (e) {} });
       osciladores = [];
     }
-	function mostrarAyuda() {
-  document.querySelectorAll('.content').forEach(c => c.classList.add('oculto'));
-  document.getElementById('ayuda').classList.remove('oculto');
-}
-function mostrarMiniLab() {
-  document.querySelectorAll('.content').forEach(c => c.classList.add('oculto'));
-  document.getElementById('minilab').classList.remove('oculto');
-}
 
     actualizarAcordes();
   </script>
-<div class="content oculto" id="ayuda">
-  <h1>🧠 ¿Cómo usar el Mini Lab?</h1>
-  <p>
-    Este mini laboratorio te permite explorar progresiones de acordes y modos griegos de forma interactiva.
-  </p>
-  <ul>
-    <li>🎼 <strong>Tonalidad:</strong> Seleccioná la nota raíz (por ejemplo C, D, E...)</li>
-    <li>🧭 <strong>Modo:</strong> Elegí un modo como Jónico (mayor), Eólico (menor), etc.</li>
-    <li>🎹 <strong>Instrumento:</strong> Cambia el timbre del sonido de los acordes.</li>
-    <li>🎵 <strong>Progresión sugerida:</strong> Carga acordes comunes según el género musical.</li>
-    <li>➕ <strong>Agregar acorde:</strong> Añade un nuevo acorde personalizado.</li>
-    <li>▶ <strong>Reproducir:</strong> Escuchá la progresión con sonido analógico simulado.</li>
-    <li>⏹ <strong>Detener:</strong> Frená la reproducción.</li>
-    <li>🥁 <strong>Batería:</strong> Reproduce una base rítmica a tu gusto.</li>
-  </ul>
-  <p>
-    ¡Explorá distintos modos, cambiá los acordes y descubrí nuevas sonoridades!
-  </p>
-</div>
+
 </body>
 </html>
