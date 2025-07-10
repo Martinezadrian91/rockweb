@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-  <title>Mini Lab Acordes + Laboratorio Armónico</title>
+  <title>Mini Lab Acordes Vintage + Laboratorio Armónico</title>
     <style>
     body {
       margin: 0;
@@ -37,75 +37,46 @@
   <div class="menu">
     <a href="minilab.html">Volver</a>
   </div>
-
   <div class="content">
-    <h1>🎶2 Mini Lab Acordes</h1>
-
-    <label for="tonalidad">Tonalidad:</label>
-    <select id="tonalidad" onchange="actualizarAcordes()">
-      <option value="C">C</option><option value="D">D</option><option value="E">E</option>
-      <option value="F">F</option><option value="G">G</option><option value="A">A</option>
-      <option value="B">B</option>
-    </select>
-
-    <label for="modo">Modo:</label>
-    <select id="modo" onchange="actualizarAcordes()">
-      <option value="ionico">Jónico</option><option value="dorico">Dórico</option>
-      <option value="frigio">Frigio</option><option value="lidio">Lidio</option>
-      <option value="mixolidio">Mixolidio</option><option value="eolico">Eólico</option>
-      <option value="locrio">Locrio</option>
-    </select>
-
-    <label for="instrumento">Instrumento:</label>
-    <select id="instrumento">
-      <option value="sine">Sintetizador</option>
-      <option value="square">Guitarra eléctrica</option>
-      <option value="triangle">Piano digital</option>
-      <option value="sawtooth">Órgano</option>
-    </select>
-
-    <label for="volAcordes">Volumen acordes:</label>
-    <input type="range" id="volAcordes" min="0" max="1" step="0.01" value="0.3">
-
-    <label for="progresiones">Progresión sugerida:</label>
-    <select id="progresiones" onchange="cargarProgresion()">
-      <option value="">-- Elegir una progresión --</option>
-      <option value="Rock,0,3,4">🎸 Rock: I - IV - V</option>
-      <option value="Pop,0,4,5,3">🎹 Pop: I - V - vi - IV</option>
-      <option value="Jazz,1,4,0">🎷 Jazz: ii - V - I</option>
-      <option value="Blues,0,3,0,4">🎺 Blues: I - IV - I - V</option>
-      <option value="Clasico,0,5,3,4">🎻 Clásico: I - vi - IV - V</option>
-    </select>
-
-    <h3>Selecciona los acordes:</h3>
-    <div id="acordesContainer"></div>
-    <button onclick="agregarAcorde()">➕ Agregar Acorde</button>
-    <button onclick="reproducirProgresion()">▶ Reproducir</button>
-    <button onclick="detenerProgresion()">⏹ Detener</button>
-
     <h3>Base de batería:</h3>
     <audio controls src="https://martinezadrian91.github.io/rockweb/1739336159272.mp3"></audio>
 
     <hr>
     <h3>🎛️ Laboratorio Armónico: Mezcla Tonalidades</h3>
 
-    <label>Tonalidad 1:</label>
-    <select id="tonalidad1">
-      <option value="C">C</option><option value="G">G</option><option value="D">D</option>
-    </select>
-    <label>Modo 1:</label>
-    <select id="modo1">
-      <option value="ionico">Jónico</option><option value="mixolidio">Mixolidio</option>
-    </select>
+    
+    
+  <label>Tonalidad 1:</label>
+<select id="tonalidad1">
+  <option value="C">C</option><option value="C#">C#</option><option value="D">D</option>
+  <option value="D#">D#</option><option value="E">E</option><option value="F">F</option>
+  <option value="F#">F#</option><option value="G">G</option><option value="G#">G#</option>
+  <option value="A">A</option><option value="A#">A#</option><option value="B">B</option>
+</select>
 
-    <label>Tonalidad 2:</label>
-    <select id="tonalidad2">
-      <option value="G">G</option><option value="D">D</option><option value="A">A</option>
-    </select>
-    <label>Modo 2:</label>
-    <select id="modo2">
-      <option value="ionico">Jónico</option><option value="mixolidio">Mixolidio</option>
-    </select>
+<label>Modo 1:</label>
+<select id="modo1">
+  <option value="ionico">Jónico</option><option value="dorico">Dórico</option>
+  <option value="frigio">Frigio</option><option value="lidio">Lidio</option>
+  <option value="mixolidio">Mixolidio</option><option value="eolico">Eólico</option>
+  <option value="locrio">Locrio</option>
+</select>
+
+<label>Tonalidad 2:</label>
+<select id="tonalidad2">
+  <option value="C">C</option><option value="C#">C#</option><option value="D">D</option>
+  <option value="D#">D#</option><option value="E">E</option><option value="F">F</option>
+  <option value="F#">F#</option><option value="G">G</option><option value="G#">G#</option>
+  <option value="A">A</option><option value="A#">A#</option><option value="B">B</option>
+</select>
+
+<label>Modo 2:</label>
+<select id="modo2">
+  <option value="ionico">Jónico</option><option value="dorico">Dórico</option>
+  <option value="frigio">Frigio</option><option value="lidio">Lidio</option>
+  <option value="mixolidio">Mixolidio</option><option value="eolico">Eólico</option>
+  <option value="locrio">Locrio</option>
+</select>
 
     <button onclick="mostrarCampos()">🎵 Ver Campos Armónicos</button>
     <div id="camposArmonicos"></div>
