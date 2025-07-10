@@ -110,10 +110,11 @@
 <body>
   <div class="menu">
     <a href="index.html">Volver</a>
+<a onclick="mostrarAyuda()">¿Cómo usar?</a>
   </div>
 
   <div class="content" id="minilab">
-    <h1>🎶 Mini Lab de Progresiones y Modos</h1>
+    <h1>ðŸŽ¶ Mini Lab de Progresiones y Modos</h1>
     <label for="tonalidad">Tonalidad:</label>
     <select id="tonalidad" onchange="actualizarAcordes()">
       <option value="C">C</option><option value="D">D</option><option value="E">E</option>
@@ -123,44 +124,44 @@
 
     <label for="modo">Modo:</label>
     <select id="modo" onchange="actualizarAcordes()">
-      <option value="ionico">Jónico</option>
-      <option value="dorico">Dórico</option>
+      <option value="ionico">JÃ³nico</option>
+      <option value="dorico">DÃ³rico</option>
       <option value="frigio">Frigio</option>
       <option value="lidio">Lidio</option>
       <option value="mixolidio">Mixolidio</option>
-      <option value="eolico">Eólico</option>
+      <option value="eolico">EÃ³lico</option>
       <option value="locrio">Locrio</option>
     </select>
 
     <label for="instrumento">Instrumento:</label>
     <select id="instrumento">
       <option value="sine">Sintetizador</option>
-      <option value="square">Guitarra eléctrica (cuadrada)</option>
+      <option value="square">Guitarra elÃ©ctrica (cuadrada)</option>
       <option value="triangle">Piano digital (triangular)</option>
-      <option value="sawtooth">Órgano (diente de sierra)</option>
+      <option value="sawtooth">Ã“rgano (diente de sierra)</option>
     </select>
 
     <label for="volAcordes">Volumen acordes:</label>
     <input type="range" id="volAcordes" min="0" max="1" step="0.01" value="0.3">
 
-    <label for="progresiones">Progresión sugerida:</label>
+    <label for="progresiones">ProgresiÃ³n sugerida:</label>
     <select id="progresiones" onchange="cargarProgresion()">
-      <option value="">-- Elegí una progresión --</option>
-      <option value="Rock,0,3,4">🎸 Rock: I - IV - V</option>
-      <option value="Pop,0,4,5,3">🎹 Pop: I - V - vi - IV</option>
-      <option value="Jazz,1,4,0">🎷 Jazz: ii - V - I</option>
-      <option value="Blues,0,3,0,4">🎺 Blues: I - IV - I - V</option>
-      <option value="Clasico,0,5,3,4">🎻 Clásico: I - vi - IV - V</option>
+      <option value="">-- ElegÃ­ una progresiÃ³n --</option>
+      <option value="Rock,0,3,4">ðŸŽ¸ Rock: I - IV - V</option>
+      <option value="Pop,0,4,5,3">ðŸŽ¹ Pop: I - V - vi - IV</option>
+      <option value="Jazz,1,4,0">ðŸŽ· Jazz: ii - V - I</option>
+      <option value="Blues,0,3,0,4">ðŸŽº Blues: I - IV - I - V</option>
+      <option value="Clasico,0,5,3,4">ðŸŽ» ClÃ¡sico: I - vi - IV - V</option>
     </select>
 
-    <h3>Seleccioná los acordes:</h3>
+    <h3>SeleccionÃ¡ los acordes:</h3>
     <div id="acordesContainer"></div>
 
     <button onclick="agregarAcorde()">? Agregar Acorde</button>
-    <button onclick="reproducirProgresion()">? Reproducir Progresi��n</button>
-    <button onclick="detenerProgresion()">? Detener Progresi��n</button>
+    <button onclick="reproducirProgresion()">? Reproducir Progresi¨®n</button>
+    <button onclick="detenerProgresion()">? Detener Progresi¨®n</button>
 
-    <h3>Base de batería:</h3>
+    <h3>Base de baterÃ­a:</h3>
     <audio id="bateria" controls src="https://martinezadrian91.github.io/rockweb/1739336159272.mp3"></audio>
   </div>
 
@@ -287,8 +288,35 @@
       osciladores.forEach(osc => { try { osc.stop(); } catch (e) {} });
       osciladores = [];
     }
+	function mostrarAyuda() {
+  document.querySelectorAll('.content').forEach(c => c.classList.add('oculto'));
+  document.getElementById('ayuda').classList.remove('oculto');
+}
+function mostrarMiniLab() {
+  document.querySelectorAll('.content').forEach(c => c.classList.add('oculto'));
+  document.getElementById('minilab').classList.remove('oculto');
+}
 
     actualizarAcordes();
   </script>
+<div class="content oculto" id="ayuda">
+  <h1>🧠 ¿Cómo usar el Mini Lab?</h1>
+  <p>
+    Este mini laboratorio te permite explorar progresiones de acordes y modos griegos de forma interactiva.
+  </p>
+  <ul>
+    <li>🎼 <strong>Tonalidad:</strong> Seleccioná la nota raíz (por ejemplo C, D, E...)</li>
+    <li>🧭 <strong>Modo:</strong> Elegí un modo como Jónico (mayor), Eólico (menor), etc.</li>
+    <li>🎹 <strong>Instrumento:</strong> Cambia el timbre del sonido de los acordes.</li>
+    <li>🎵 <strong>Progresión sugerida:</strong> Carga acordes comunes según el género musical.</li>
+    <li>➕ <strong>Agregar acorde:</strong> Añade un nuevo acorde personalizado.</li>
+    <li>▶ <strong>Reproducir:</strong> Escuchá la progresión con sonido analógico simulado.</li>
+    <li>⏹ <strong>Detener:</strong> Frená la reproducción.</li>
+    <li>🥁 <strong>Batería:</strong> Reproduce una base rítmica a tu gusto.</li>
+  </ul>
+  <p>
+    ¡Explorá distintos modos, cambiá los acordes y descubrí nuevas sonoridades!
+  </p>
+</div>
 </body>
 </html>
