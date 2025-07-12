@@ -1,7 +1,6 @@
 <?php
 $ip = $_SERVER['REMOTE_ADDR'];
 $fecha = date("Y-m-d H:i:s");
-
 $archivo = "visitas.txt";
 
 if (file_put_contents($archivo, "$fecha - $ip\n", FILE_APPEND)) {
