@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <title>Empezar</title>
@@ -8,21 +8,50 @@
   <h2>Haz clic para empezar</h2>
   <button onclick="registrarVisita()">Empezar</button>
 
-  <script>
-    function registrarVisita() {
-      fetch("registro.php")
-  .then(response => {
-    if (!response.ok) throw new Error("Fallo en el servidor");
-    return response.text();
-  })
-  .then(data => {
-    alert("Visita registrada: " + data);
-  })
-  .catch(error => {
-    alert("No se pudo registrar la visita: " + error.message);
-  });
+  <script type="module">
+    // Importar SDK de Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
-    }
+    // ⚠️ Configuración de tu proyecto Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAMB9gzDCRiSbpYFUWy2jgLH5eZ7bIBQs8",
+      authDomain: "rockweb-32c08.firebaseapp.com",
+      databaseURL: "https://rockweb-32c08-default-rtdb.firebaseio.com",
+      projectId: "rockweb-32c08",
+      storageBucket: "rockweb-32c08.appspot.com",
+      messagingSenderId: "711195702962",
+      appId: "1:711195702962:web:6e9badecbfde62421a3bab",
+      measurementId: "G-YXBEKDSW4"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Función principal: registrar visita e IP
+    window.registrarVisita = async function () {
+      try {
+        // Obtener IP pública del visitante
+        const ipRes = await fetch("https://api.ipify.org?format=json");
+        const ipData = await ipRes.json();
+        const ip = ipData.ip;
+
+        // Crear entrada de visita
+        const visita = {
+          ip: ip,
+          timestamp: new Date().toISOString()
+        };
+
+        // Guardar en Firebase bajo "visitas/"
+        await push(ref(db, "visitas"), visita);
+
+        // Redirigir a index.html después de registrar
+        window.location.href = "index.html";
+      } catch (error) {
+        alert("Error al registrar visita: " + error.message);
+      }
+    };
   </script>
 </body>
 </html>
