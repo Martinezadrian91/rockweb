@@ -97,12 +97,12 @@ position: absolute;
   <button onclick="registrarVisita()">Empezar</button>
 </center>
 </div>
-  <script type="module">
-    // Importar SDK de Firebase
+ <script type="module">
+    // Importar Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
-    // ⚠️ Configuración de tu proyecto Firebase
+    // Tu configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAMB9gzDCRiSbpYFUWy2jgLH5eZ7bIBQs8",
       authDomain: "rockweb-32c08.firebaseapp.com",
@@ -118,27 +118,28 @@ position: absolute;
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Función principal: registrar visita e IP
+    // Función para registrar la visita
     window.registrarVisita = async function () {
       try {
-        // Obtener IP pública del visitante
-        const ipRes = await fetch("https://api.ipify.org?format=json");
-        const ipData = await ipRes.json();
-        const ip = ipData.ip;
+        // Obtener IP y ubicación geográfica
+        const geoRes = await fetch("https://ipapi.co/json/");
+        const geoData = await geoRes.json();
 
-        // Crear entrada de visita
         const visita = {
-          ip: ip,
+          ip: geoData.ip,
+          pais: geoData.country_name,
+          region: geoData.region,
+          ciudad: geoData.city,
           timestamp: new Date().toISOString()
         };
 
-        // Guardar en Firebase bajo "visitas/"
+        // Guardar en Firebase
         await push(ref(db, "visitas"), visita);
 
-        // Redirigir a index.html después de registrar
-        window.location.href = "minilab.html";
+        // Redirigir a index.html
+        window.location.href = "index.html";
       } catch (error) {
-        alert("Error al registrar visita: " + error.message);
+        alert("❌ Error al registrar la visita: " + error.message);
       }
     };
   </script>
