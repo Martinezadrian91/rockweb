@@ -90,15 +90,14 @@ position: absolute;
 </head>
 <body>
   <h2>Lista de Visitas</h2>
+ <button onclick="borrarVisitas()">🗑️ Borrar todas las visitas</button>
 <h1>
   <ul id="lista-visitas">Cargando visitas...</ul>
 </h1>
-  <script type="module">
-    // Importar Firebase
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
-    // Configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAMB9gzDCRiSbpYFUWy2jgLH5eZ7bIBQs8",
       authDomain: "rockweb-32c08.firebaseapp.com",
@@ -110,22 +109,18 @@ position: absolute;
       measurementId: "G-YXBEKDSW4"
     };
 
-    // Inicializar Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const visitasRef = ref(db, "visitas");
-
     const lista = document.getElementById("lista-visitas");
 
-    // Mostrar las visitas en tiempo real
+    // Mostrar visitas en tiempo real
     onValue(visitasRef, (snapshot) => {
       const datos = snapshot.val();
       lista.innerHTML = "";
 
       if (datos) {
-        // Convertir a array y ordenar por fecha (más reciente primero)
         const visitas = Object.values(datos).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
         visitas.forEach((visita) => {
           const fecha = new Date(visita.timestamp).toLocaleString();
           const ciudad = visita.ciudad || "Desconocida";
@@ -139,6 +134,19 @@ position: absolute;
         lista.innerHTML = "<li>No hay visitas registradas.</li>";
       }
     });
+
+    // Borrar todas las visitas
+    window.borrarVisitas = async function () {
+      const confirmar = confirm("¿Seguro que querés borrar TODAS las visitas?");
+      if (confirmar) {
+        try {
+          await remove(visitasRef);
+          alert("✅ Visitas borradas correctamente.");
+        } catch (err) {
+          alert("❌ Error al borrar visitas: " + err.message);
+        }
+      }
+    };
   </script>
 </body>
 </html>
