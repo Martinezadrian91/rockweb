@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Empezar</title>
+</head>
+<body>
+  <h2>Haz clic para empezar</h2>
+  <button onclick="registrarVisita()">Empezar</button>
+
+  <script>
+    function registrarVisita() {
+      fetch("registro.php")
+  .then(response => {
+    if (!response.ok) throw new Error("Fallo en el servidor");
+    return response.text();
+  })
+  .then(data => {
+    alert("Visita registrada: " + data);
+  })
+  .catch(error => {
+    alert("No se pudo registrar la visita: " + error.message);
+  });
+
+    }
+  </script>
+</body>
+</html>
