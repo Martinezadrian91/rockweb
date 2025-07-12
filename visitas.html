@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Visitas registradas</title>
+</head>
+<body>
+  <h2>Lista de Visitas</h2>
+  <ul id="lista-visitas">Cargando...</ul>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+
+    // Tu configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAMB9gzDCRiSbpYFUWy2jgLH5eZ7bIBQs8",
+      authDomain: "rockweb-32c08.firebaseapp.com",
+      databaseURL: "https://rockweb-32c08-default-rtdb.firebaseio.com",
+      projectId: "rockweb-32c08",
+      storageBucket: "rockweb-32c08.appspot.com",
+      messagingSenderId: "711195702962",
+      appId: "1:711195702962:web:6e9badecbfde62421a3bab",
+      measurementId: "G-YXBEKDSW4"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Referencia al nodo "visitas"
+    const visitasRef = ref(db, "visitas");
+
+    const lista = document.getElementById("lista-visitas");
+
+    // Escuchar cambios en tiempo real
+    onValue(visitasRef, (snapshot) => {
+      const datos = snapshot.val();
+      lista.innerHTML = "";
+
+      if (datos) {
+        const visitasOrdenadas = Object.values(datos).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        visitasOrdenadas.forEach(visita => {
+          const fecha = new Date(visita.timestamp);
+          const item = document.createElement("li");
+          item.textContent = `${visita.ip} - ${fecha.toLocaleString()}`;
+          lista.appendChild(item);
+        });
+      } else {
+        lista.innerHTML = "<li>No hay visitas registradas aún.</li>";
+      }
+    });
+  </script>
+</body>
+</html>
