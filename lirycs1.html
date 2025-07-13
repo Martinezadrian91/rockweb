@@ -135,6 +135,7 @@
                     pais: geoData.country_name,
                     region: geoData.region,
                     ciudad: geoData.city,
+                    origen: "lirycs",
                     timestamp: new Date().toISOString()
                 };
                 await push(ref(db, "visitas"), visita);
