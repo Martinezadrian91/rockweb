@@ -82,6 +82,7 @@
     <div id="camposArmonicos"></div>
     <button onclick="sugerirProgresionMixta()">✨ Sugerir Progresión Mixta</button>
     <div id="progresionMixtaContainer"></div>
+      <button onclick="sugerirProgresionMixtaLarga()">🌟 Sugerir Progresión Mixta Larga</button>
   </div>
 
   <script>
@@ -210,7 +211,38 @@
         <strong>Campo 2:</strong> ${acordes2.join(', ')}
       `;
     }
-
+function sugerirProgresionMixtaLarga(){
+      const t1=document.getElementById('tonalidad1').value, m1=document.getElementById('modo1').value;
+      const t2=document.getElementById('tonalidad2').value, m2=document.getElementById('modo2').value;
+      const idx1=notasBase.indexOf(t1), idx2=notasBase.indexOf(t2);
+      let acordes1=[],acordes2=[];
+      for(let i=0;i<7;i++){
+        let n1=notasBase[(idx1+[0,2,4,5,7,9,11][i])%12];
+        let t=modos[m1][i]; acordes1.push(t==='maj'?n1: t==='min'?n1+'m': n1+'dim');
+        let n2=notasBase[(idx2+[0,2,4,5,7,9,11][i])%12];
+        let t2m=modos[m2][i]; acordes2.push(t2m==='maj'?n2: t2m==='min'?n2+'m': n2+'dim');
+      }
+      const grados = [0,1,2,3,4,5,6];
+      const extensiones = ['', '7', 'maj7', 'm7', '9'];
+      const mezcla = [];
+      for (let i = 0; i < 8; i++) {
+        const usarCampo1 = Math.random() > 0.5;
+        const base = usarCampo1 ? acordes1 : acordes2;
+        let acordeBase = base[grados[Math.floor(Math.random() * grados.length)]];
+        let ext = extensiones[Math.floor(Math.random() * extensiones.length)];
+        if (ext && !acordeBase.includes('dim')) acordeBase += ext;
+        mezcla.push(acordeBase);
+      }
+      document.getElementById('progresionMixtaContainer').innerHTML = `
+        <strong>Progresión Mixta Larga:</strong> ${mezcla.join(' - ')}
+      `;
+      const cont = document.getElementById('acordesContainer'); cont.innerHTML='';
+      mezcla.forEach(ac=>{
+        const sel=document.createElement('select');
+        const opt=document.createElement('option'); opt.value=ac; opt.textContent=ac;
+        sel.appendChild(opt); cont.appendChild(sel);
+      });
+    }
     function sugerirProgresionMixta(){
       const t1=document.getElementById('tonalidad1').value, m1=document.getElementById('modo1').value;
       const t2=document.getElementById('tonalidad2').value, m2=document.getElementById('modo2').value;
