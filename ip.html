@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ubicación por IP con jQuery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f8ff; padding: 2em; }
+    h2 { color: #003366; }
+    #resultado {
+      background: #fff;
+      padding: 1em;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #ccc;
+      margin-top: 1em;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h2>🌐 Ubicación estimada por IP (con jQuery)</h2>
+  <p id="estado">Consultando ubicación...</p>
+  <div id="resultado">Esperando respuesta...</div>
+
+  <!-- Incluimos jQuery desde CDN -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <script>
+    const token = "pk.5b3da7dcbe27b68774d13456a0ef0b93";
+
+    const data = {
+      token: token,
+      ip: "auto",
+      fallback: { ipf: 1 },
+      address: 1
+    };
+
+    $.ajax({
+      url: "https://us1.unwiredlabs.com/v2/process.php",
+      method: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(data),
+      success: function (response) {
+        if (response.status === "ok") {
+          $("#estado").text("✅ Ubicación obtenida:");
+          $("#resultado").text(
+            `📍 Dirección: ${response.address || 'No disponible'}\n` +
+            `🌍 Latitud: ${response.lat}\n` +
+            `🌐 Longitud: ${response.lon}\n` +
+            `🎯 Precisión estimada: ${response.accuracy} metros\n` +
+            `📡 Fuente: IP`
+          );
+        } else {
+          $("#estado").text("⚠️ Error de la API:");
+          $("#resultado").text(JSON.stringify(response, null, 2));
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#estado").text("❌ Error al conectar con la API:");
+        $("#resultado").text(errorThrown);
+        console.error("Error:", errorThrown);
+      }
+    });
+  </script>
+</body>
+</html>
