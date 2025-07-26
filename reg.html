@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Mensaje privado</title>
+</head>
+<body>
+  <h2>recibido correctamente.</h2>
+  <p>Esta visita ha sido registrada con fines de control personal.</p>
+
+  <!-- Imagen invisible que llama al script PHP -->
+  <img src="registrar.php" width="1" height="1" alt="">
+</body>
 <script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
@@ -26,13 +34,24 @@
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
-</script>
-</head>
-<body>
-  <h2>Mensaje recibido correctamente.</h2>
-  <p>Esta visita ha sido registrada con fines de control personal.</p>
+    async function registrarVisita() {
+            try {
+                const geoRes = await fetch("https://ipapi.co/json/");
+                const geoData = await geoRes.json();
+                const visita = {
+                    ip: geoData.ip,
+                    pais: geoData.country_name,
+                    region: geoData.region,
+                    ciudad: geoData.city,
+                    timestamp: new Date().toISOString()
+                };
+                await push(ref(db, "visitas"), visita);
+                console.log("✅ Visita registrada");
+            } catch (error) {
+                console.error("❌ Error al registrar visita:", error.message);
+            }
+        }
 
-  <!-- Imagen invisible que llama al script PHP -->
-  <img src="registrar.php" width="1" height="1" alt="">
-</body>
+        window.onload = registrarVisita;
+</script>
 </html>
