@@ -11,7 +11,7 @@ $data = [
 ];
 
 // URL de tu base de datos Realtime Firebase
-$url = "https://rockweb-32c08-default-rtdb.firebaseio.com/registros.json";
+$url = "https://registros-29b03-default-rtdb.firebaseio.com/registros.json";
 
 // Enviar con cURL
 $ch = curl_init($url);
