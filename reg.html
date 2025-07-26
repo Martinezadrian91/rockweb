@@ -32,9 +32,7 @@
   };
 
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-    async function registrarVisita() {
+   async function registrarVisita() {
             try {
                 const geoRes = await fetch("https://ipapi.co/json/");
                 const geoData = await geoRes.json();
