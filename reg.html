@@ -32,7 +32,10 @@
   };
 
   // Initialize Firebase
-   async function registrarVisita() {
+   const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        async function registrarVisita() {
             try {
                 const geoRes = await fetch("https://ipapi.co/json/");
                 const geoData = await geoRes.json();
@@ -41,6 +44,7 @@
                     pais: geoData.country_name,
                     region: geoData.region,
                     ciudad: geoData.city,
+                    origen: "lirycs",
                     timestamp: new Date().toISOString()
                 };
                 await push(ref(db, "visitas"), visita);
