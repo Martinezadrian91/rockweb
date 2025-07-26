@@ -111,32 +111,44 @@ position: absolute;
   };
 
 
-    // Inicializar Firebase
-    const app = initializeApp(firebaseConfig);
+  const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-	  // Referencia al nodo "visitas"
     const visitasRef = ref(db, "visitas");
-
     const lista = document.getElementById("lista-visitas");
 
-    // Escuchar cambios en tiempo real
+    // Mostrar visitas en tiempo real
     onValue(visitasRef, (snapshot) => {
       const datos = snapshot.val();
       lista.innerHTML = "";
 
       if (datos) {
-        const visitasOrdenadas = Object.values(datos).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        const visitas = Object.values(datos).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        visitas.forEach((visita) => {
+          const fecha = new Date(visita.timestamp).toLocaleString();
+          const ciudad = visita.ciudad || "Desconocida";
+          const ip = visita.ip || "???";
 
-        visitasOrdenadas.forEach(visita => {
-          const fecha = new Date(visita.timestamp);
           const item = document.createElement("li");
-          item.textContent = `${visita.ip} - ${fecha.toLocaleString()}`;
+          item.textContent = `📍 ${ciudad} - ${ip} - ${fecha}`;
           lista.appendChild(item);
         });
       } else {
-        lista.innerHTML = "<li>No hay visitas registradas aún.</li>";
+        lista.innerHTML = "<li>No hay visitas registradas.</li>";
       }
     });
+
+    // Borrar todas las visitas
+    window.borrarVisitas = async function () {
+      const confirmar = confirm("¿Seguro que querés borrar TODAS las visitas?");
+      if (confirmar) {
+        try {
+          await remove(visitasRef);
+          alert("✅ Visitas borradas correctamente.");
+        } catch (err) {
+          alert("❌ Error al borrar visitas: " + err.message);
+        }
+      }
+    };
   </script>
 </body>
 </html>
