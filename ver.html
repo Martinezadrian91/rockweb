@@ -2,56 +2,141 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Registros de visitas</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
-    th, td { border: 1px solid #ddd; padding: 8px; }
-    th { background-color: #4CAF50; color: white; }
-    tr:nth-child(even) { background-color: #f2f2f2; }
-  </style>
+  <title>Visitas registradas</title>
+       <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://thumbs.dreamstime.com/b/ci%C3%A9rrese-encima-de-concepto-del-fondo-la-m%C3%BAsica-los-instrumentos-119213604.jpg') no-repeat center center fixed; /* Cambia 'fondo.jpg' por la ruta de tu imagen */
+            background-size: cover;
+        }
+
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100%;
+            background-color: #a46529; /* Color estilo Android */
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            padding: 16px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .menu a:hover {
+            background-color: #6b390a; /* Color más oscuro al pasar el ratón */
+        }
+
+        .content {
+            margin-left: 220px; /* Espacio para el menú */
+            padding: 20px;
+        }
+
+        h1 {
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: white;
+  font:
+    1em Georgia,
+    serif;
+}
+	h2 {
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: white;
+  font-size: 2em;
+  font-family: Georgia, serif;
+}
+
+   .oculto {
+            display: none;
+        }
+		 button {
+  padding: 5px 20px;
+  overflow: hidden;
+  background-color: #3fc2f0;
+  /*background-image: linear-gradient(#3fc2f0, #3fc2f0);*/
+  -webkit-border-radius: 24px;
+  -moz-border-radius: 24px;
+  border-radius: 24px;
+  -webkit-box-shadow: 0 2px 5px #19748f;
+  -moz-box-shadow: 0 2px 5px #19748f;
+  box-shadow: 0 2px 5px #19748f;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 25px;
+  position: relative;
+}
+.container {
+position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+		
+    </style>
 </head>
 <body>
-  <h2>Registros de visitas a través de Firebase</h2>
-  <table id="tablaRegistros">
-    <thead>
-      <tr>
-        <th>IP</th>
-        <th>Dispositivo / Navegador</th>
-        <th>Fecha y Hora</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <h2>Lista de Visitas</h2>
+ <button onclick="borrarVisitas()">🗑️ Borrar todas las visitas</button>
+<h1>
+  <ul id="lista-visitas">Cargando visitas...</ul>
+</h1>
 
-  <script>
-    // URL de tu base de datos Firebase
-    const firebaseURL = "https://registros-29b03-default-rtdb.firebaseio.com/registros.json";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
-    fetch(firebaseURL)
-      .then(response => response.json())
-      .then(data => {
-        const tbody = document.querySelector("#tablaRegistros tbody");
-        if (data) {
-          Object.values(data).forEach(registro => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-              <td>${registro.ip}</td>
-              <td>${registro.user_agent}</td>
-              <td>${registro.hora}</td>
-            `;
-            tbody.appendChild(row);
-          });
-        } else {
-          const row = document.createElement("tr");
-          row.innerHTML = '<td colspan="3">No hay registros disponibles.</td>';
-          tbody.appendChild(row);
-        }
-      })
-      .catch(error => {
-        console.error("Error al obtener los datos:", error);
-        document.querySelector("#tablaRegistros tbody").innerHTML = '<tr><td colspan="3">Error al obtener los datos.</td></tr>';
-      });
+  const firebaseConfig = {
+    apiKey: "AIzaSyBPZPPUt72C5MUm1WBbL9udLENeUnaj6Oc",
+    authDomain: "registros-29b03.firebaseapp.com",
+    databaseURL: "https://registros-29b03-default-rtdb.firebaseio.com",
+    projectId: "registros-29b03",
+    storageBucket: "registros-29b03.firebasestorage.app",
+    messagingSenderId: "441228504173",
+    appId: "1:441228504173:web:5d991bf1642ddb9b88a364",
+    measurementId: "G-X5YR7X2SWH"
+  };
+
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+	  // Referencia al nodo "visitas"
+    const visitasRef = ref(db, "visitas");
+
+    const lista = document.getElementById("lista-visitas");
+
+    // Escuchar cambios en tiempo real
+    onValue(visitasRef, (snapshot) => {
+      const datos = snapshot.val();
+      lista.innerHTML = "";
+
+      if (datos) {
+        const visitasOrdenadas = Object.values(datos).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        visitasOrdenadas.forEach(visita => {
+          const fecha = new Date(visita.timestamp);
+          const item = document.createElement("li");
+          item.textContent = `${visita.ip} - ${fecha.toLocaleString()}`;
+          lista.appendChild(item);
+        });
+      } else {
+        lista.innerHTML = "<li>No hay visitas registradas aún.</li>";
+      }
+    });
   </script>
 </body>
 </html>
