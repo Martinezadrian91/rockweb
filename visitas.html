@@ -119,39 +119,18 @@ position: absolute;
       const datos = snapshot.val();
       lista.innerHTML = "";
 
-if (datos) {
-  const visitas = Object.values(datos).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  visitas.forEach((visita) => {
-    const fecha = new Date(visita.timestamp).toLocaleString();
+     if (datos) {
+        const visitasOrdenadas = Object.values(datos).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-    // Datos con valores por defecto si faltan
-    const ciudad = visita.ciudad || "Desconocida";
-    const region = visita.region || "Desconocida";
-    const pais = visita.pais || "Desconocido";
-    const ip = visita.ip || "???";
-    const latitud = visita.latitud || "??";
-    const longitud = visita.longitud || "??";
-    const zona = visita.zona_horaria || "??";
-    const organizacion = visita.organizacion || "???";
-    const idiomas = visita.idiomas || "??";
-    const navegador = visita.navegador || "Navegador desconocido";
-
-    // Crear el elemento visual
-    const item = document.createElement("li");
-    item.textContent = `📍 ${ciudad}, ${region}, ${pais} 🌐 IP: ${ip} 🕒 ${fecha} 
-🛰️ Lat/Lon: ${latitud}, ${longitud} 🕰️ Zona: ${zona} 
-🏢 ISP: ${organizacion} 🌎 Idiomas: ${idiomas} 
-🧭 Navegador: ${navegador}`;
-
-    // Opcional: si querés que cada entrada tenga márgenes o estilo
-    item.style.marginBottom = "1em";
-
-    lista.appendChild(item);
-  });
-} else {
-  lista.innerHTML = "<li>No hay visitas registradas.</li>";
-}
-
+        visitasOrdenadas.forEach(visita => {
+          const fecha = new Date(visita.timestamp);
+          const item = document.createElement("li");
+          item.textContent = `${visita.ip} - ${fecha.toLocaleString()}`;
+          lista.appendChild(item);
+        });
+      } else {
+        lista.innerHTML = "<li>No hay visitas registradas aún.</li>";
+      }
 
     // Borrar todas las visitas
     window.borrarVisitas = async function () {
