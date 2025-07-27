@@ -92,7 +92,7 @@ position: absolute;
   <h2>Lista de Visitas</h2>
  <button onclick="borrarVisitas()">🗑️ Borrar todas las visitas</button>
 <h1>
-  <ul id="lista-visitas">Cargando ...</ul>
+  <ul id="lista-visitas">Cargando v...</ul>
 </h1>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
@@ -119,7 +119,7 @@ position: absolute;
       const datos = snapshot.val();
       lista.innerHTML = "";
 
-     if (datos) {
+        if (datos) {
         const visitasOrdenadas = Object.values(datos).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
         visitasOrdenadas.forEach(visita => {
