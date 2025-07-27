@@ -92,7 +92,7 @@ position: absolute;
   <h2>Lista de Visitas</h2>
  <button onclick="borrarVisitas()">🗑️ Borrar todas las visitas</button>
 <h1>
-  <ul id="lista-visitas">Cargando visitas...</ul>
+  <ul id="lista-visitas">Cargando ...</ul>
 </h1>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
@@ -131,7 +131,6 @@ position: absolute;
       } else {
         lista.innerHTML = "<li>No hay visitas registradas aún.</li>";
       }
-
     // Borrar todas las visitas
     window.borrarVisitas = async function () {
       const confirmar = confirm("¿Seguro que querés borrar TODAS las visitas?");
