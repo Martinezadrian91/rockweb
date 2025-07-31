@@ -109,12 +109,15 @@ position: absolute;
       measurementId: "G-YXBEKDSW4"
     };
 
+   // Inicializar Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+	  // Referencia al nodo "visitas"
     const visitasRef = ref(db, "visitas");
+
     const lista = document.getElementById("lista-visitas");
 
-    // Mostrar visitas en tiempo real
+    // Escuchar cambios en tiempo real
     onValue(visitasRef, (snapshot) => {
       const datos = snapshot.val();
       lista.innerHTML = "";
