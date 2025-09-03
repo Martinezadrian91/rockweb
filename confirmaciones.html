@@ -32,12 +32,13 @@
     const db = firebase.database();
     const lista = document.getElementById("lista");
 
-    db.ref("confirmaciones").on("child_added", snap => {
-      const data = snap.val();
-      const li = document.createElement("li");
-      li.textContent = `${new Date(data.timestamp).toLocaleString()} - ${data.mensaje} (${data.estado})`;
-      lista.appendChild(li);
-    });
+ db.ref("confirmaciones").on("child_added", snap => {
+  const data = snap.val();
+  const li = document.createElement("li");
+  li.textContent = `${new Date(data.timestamp).toLocaleString()} - ${data.mensaje} (${data.estado})`;
+  lista.appendChild(li);
+});
   </script>
 </body>
 </html>
+
