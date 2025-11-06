@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lirycs</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://thumbs.dreamstime.com/b/ci%C3%A9rrese-encima-de-concepto-del-fondo-la-m%C3%BAsica-los-instrumentos-119213604.jpg') no-repeat center center fixed; /* Cambia 'fondo.jpg' por la ruta de tu imagen */
+            background-size: cover;
+        }
+
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100%;
+            background-color: #a46529; /* Color estilo Android */
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            padding: 16px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .menu a:hover {
+            background-color: #6b390a; /* Color más oscuro al pasar el ratón */
+        }
+
+        .content {
+            margin-left: 110px; /* Espacio para el menú */
+            padding: 20px;
+        }
+
+        h1 {
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: white;
+  font:
+    1.5em Georgia,
+    serif;
+}
+h3 {
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: white;
+  font-size: 1em;
+  font-family: Georgia, serif;
+}
+	h2 {
+	 text-shadow:
+    1px 1px 2px black,
+    0 0 1em blue,
+    0 0 0.2em blue;
+  color: white;
+  font:
+    1.5em Georgia,
+    serif;
+	}
+
+   .oculto {
+            display: none;
+        }
+		 
+		
+    </style>
+  
+   
+
+<script>
+    function toggleCajas() {
+        var cajas = document.querySelectorAll('.caja');
+        var mostrarButton = document.getElementById('mostrar-button');
+        var ocultarButton = document.getElementById('ocultar-button');
+
+        var algunoOculto = Array.from(cajas).some(caja => caja.style.display === 'none' || caja.style.display === '');
+
+        cajas.forEach(function(caja) {
+            if (algunoOculto) {
+                caja.style.display = 'block';
+            } else {
+                caja.style.display = 'none';
+            }
+        });
+
+        if (algunoOculto) {
+            mostrarButton.style.display = 'none';
+            ocultarButton.style.display = 'inline-block';
+        } else {
+            mostrarButton.style.display = 'inline-block';
+            ocultarButton.style.display = 'none';
+        }
+    }
+</script>
+
+ 
+
+</head>
+
+
+
+<body>
+    <div class="menu">
+      
+		<a href="https://martinezadrian91.github.io/rockweb/lirycs.html">volver</a>
+       
+    </div>
+
+	
+    <div class="content">
+	
+        <h1>Flash 4</h1>
+       
+        <!-- Aquí puedes agregar más contenido -->
+		
+	<h3>
+	Con tanta gente alrededor 
+	<br>
+...¿Te sentiste sola?<br>
+Como un chiste sin humor<br>
+que pasó de moda<br><br>
+
+Cuando perdiste el corazón <br>
+¿Eras mejor persona?<br>
+Todo el espacio del mundo <br>
+nunca alcanza,<br>
+si la vida en un segundo<br>
+te quitó confianza <br><br>
+
+Ningún lugar será seguro,<br>
+Ni tu propia casa.<br>
+Cuando el día más oscuro <br>
+se vistió de farsa.
+<br><br>
+
+todo te amenaza.<br>
+Socializar detrás de un muro<br>
+Es lo que te cansa.<br><br>
+
+las grietas también son ventanas<br>
+donde la luz suele entrar.<br>
+no toda expriencia es mala<br>
+a veces pueden enseñar. <br>
+
+</h3>
+		
+		
+    </div>
+  
+ 
+
+</body>
+
+</html>
