@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta charset="UTF-8">
+<title>Buscador Multilingüe</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #0f1115;
+    color: #eee;
+    text-align: center;
+    padding: 40px;
+  }
+  input, select, button {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+  }
+  input, select {
+    width: 250px;
+  }
+  button {
+    background-color: #ff6a00;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  button:hover {
+    background-color: #ffa733;
+  }
+  #translationBox {
+    background: #1c1f26;
+    color: #0f0;
+    padding: 10px;
+    margin: 15px auto;
+    width: 60%;
+    border-radius: 8px;
+    font-style: italic;
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <h1>🌐 Buscador Multilingüe</h1>
+  <p>1) Ingresa tu búsqueda (por ejemplo: <em>"Música regional"</em>)</p>
+<p>2) Selecciona un idioma...</p>
+<p>3) Apretá "traducir"...</p>
+<p>4) Después "Buscar" y listo! </p>
+  <input type="text" id="searchText" placeholder="Escribe en español...">
+  <select id="language">
+    <option value="en">Inglés</option>
+    <option value="fr">Francés</option>
+    <option value="de">Alemán</option>
+    <option value="it">Italiano</option>
+    <option value="pt">Portugués</option>
+    <option value="ja">Japonés</option>
+    <option value="ko">Coreano</option>
+    <option value="ru">Ruso</option>
+    <option value="zh-CN">Chino simplificado</option>
+  <optgroup label="🌍 Idiomas principales">
+    <option value="en">Inglés</option>
+    <option value="fr">Francés</option>
+    <option value="de">Alemán</option>
+    <option value="it">Italiano</option>
+    <option value="pt">Portugués</option>
+    <option value="ru">Ruso</option>
+    <option value="ja">Japonés</option>
+    <option value="ko">Coreano</option>
+    <option value="zh-CN">Chino simplificado</option>
+  </optgroup>
+
+  <optgroup label="🎻 Europa del Norte">
+    <option value="sv">Sueco</option>
+    <option value="fi">Finés</option>
+    <option value="no">Noruego</option>
+    <option value="is">Islandés</option>
+    <option value="da">Danés</option>
+  </optgroup>
+
+  <optgroup label="🪕 Europa del Este / Balcanes">
+    <option value="pl">Polaco</option>
+    <option value="cs">Checo</option>
+    <option value="hu">Húngaro</option>
+    <option value="ro">Rumano</option>
+  </optgroup>
+
+  <optgroup label="🕌 Oriente Medio y Asia Central">
+    <option value="ar">Árabe</option>
+    <option value="tr">Turco</option>
+    <option value="fa">Persa (Farsi)</option>
+    <option value="he">Hebreo</option>
+  </optgroup>
+
+  <optgroup label="🕉️ Asia del Sur y Este">
+    <option value="hi">Hindi</option>
+    <option value="ta">Tamil</option>
+    <option value="th">Tailandés</option>
+  </optgroup>
+
+  <optgroup label="🎵 Culturas especiales">
+    <option value="cy">Galés</option>
+    <option value="br">Bretón</option>
+    <option value="ca">Catalán</option>
+    <option value="gd">Gaélico escocés</option>
+    <option value="et">Estonio</option>
+  </optgroup>
+</select>
+
+
+
+  <button onclick="translateAndShow()">Traducir</button>
+  <button onclick="search()">Buscar</button>
+<p>Las búsquedas en otro idioma permiten resultados mas profundos.<em><br>
+Normalmente los motores de busqueda aplican filtros limitando los resultados a una region en particular.<br>
+ De esta manera vas a encontrar mucho mas contenido de otras regiones remotas.</em></p>
+  
+  <div id="translationBox"></div>
+
+  <script>
+    let lastTranslated = "";
+
+    async function translateAndShow() {
+      const text = document.getElementById("searchText").value.trim();
+      const targetLang = document.getElementById("language").value;
+      const box = document.getElementById("translationBox");
+
+      if (!text) return alert("Escribe algo para traducir.");
+
+      try {
+        const res = await fetch(
+          `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=es|${targetLang}`
+        );
+        const data = await res.json();
+        const translated = data.responseData.translatedText;
+
+        lastTranslated = translated;
+        box.innerHTML = `<strong>Traducción:</strong> ${translated}`;
+        box.style.display = "block";
+      } catch (e) {
+        alert("Error al traducir, intenta de nuevo.");
+        console.error(e);
+      }
+    }
+
+function search() {
+  const query = lastTranslated || document.getElementById("searchText").value.trim();
+  if (!query) return alert("Primero traduce o escribe tu búsqueda.");
+
+  // búsqueda sin filtro adicional, para resultados más amplios
+  const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+  window.open(url, "_blank");
+}
+  </script>
+</body>
+</html>
