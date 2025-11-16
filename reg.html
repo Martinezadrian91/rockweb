@@ -122,10 +122,10 @@ const firebaseConfig = {
                     pais: geoData.country_name,
                     region: geoData.region,
                     ciudad: geoData.city,
-                    origen: "lirycs",
+                    origen: "lirycswan",
                     timestamp: new Date().toISOString()
                 };
-                await push(ref(db, "visitaswan"), visita);
+                await push(ref(db, "visitas"), visita);
                 console.log("✅ Visita registrada");
             } catch (error) {
                 console.error("❌ Error al registrar visita:", error.message);
