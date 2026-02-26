@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Calculadora ENERSA T1-R 2026</title>
+<style>
+  body { background:#111; color:#0f0; font-family:Arial; padding:20px; }
+  h2 { margin-bottom:10px; }
+  input { width:120px; padding:6px; font-size:1rem; }
+  .button2 {
+  /* in scss with just one variable i can change opacity with rgba(variable, opacity) but in css it's not possible so i have used three seperate variables */
+  /* with hue-rotate color can be changed */
+  --main-color: rgb(46, 213, 115);
+  --main-bg-color: rgba(46, 213, 116, 0.36);
+  --pattern-color: rgba(46, 213, 116, 0.073);
+
+  /* change this rotation value */
+  filter: hue-rotate(0deg);
+
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5rem;
+  background: radial-gradient(
+      circle,
+      var(--main-bg-color) 0%,
+      rgba(0, 0, 0, 0) 95%
+    ),
+    linear-gradient(var(--pattern-color) 1px, transparent 1px),
+    linear-gradient(to right, var(--pattern-color) 1px, transparent 1px);
+  background-size:
+    cover,
+    15px 15px,
+    15px 15px;
+  background-position:
+    center center,
+    center center,
+    center center;
+  border-image: radial-gradient(
+      circle,
+      var(--main-color) 0%,
+      rgba(0, 0, 0, 0) 100%
+    )
+    1;
+  border-width: 1px 0 1px 0;
+  color: var(--main-color);
+  padding: 1rem 3rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  transition: background-size 0.2s ease-in-out;
+}
+
+.button2:hover {
+  background-size:
+    cover,
+    10px 10px,
+    10px 10px;
+}
+.button2:active {
+  filter: hue-rotate(250deg);
+}
+  #precio { font-size:1.8rem; margin-top:15px; }
+  #estado { margin-top:15px; font-size:1.2rem; }
+</style>
+</head>
+<body>
+<center>
+<h2>Calculadora Residencial Monofásico T1-R (Bimestral)</h2>
+<br>
+<label>Categoría:</label>
+<select id="categoria">
+  <option value="N1">N1 - Sin Subsidio</option>
+  <option value="N2">N2 - Subsidio Nacional y Provincial</option>
+  <option value="N3">N3 - Subsidio Nacional</option>
+</select>
+<br>
+<br>
+<label>Consumo bimestral (kWh):</label>
+<input type="number" id="consumo" placeholder="Ej: 350">
+<br>
+<br>
+<button onclick="calcular()" class="button2">Calcular</button>
+<br>
+<br>
+<div id="resultado"></div>
+</center>
+<script>
+
+const tarifas = {
+
+N1: {
+  cargoFijo: 5249.00,
+  bloques: [
+    { limite: 200, precio: 202.55 },
+    { limite: 400, precio: 228.79 },
+    { limite: 600, precio: 264.27 },
+    { limite: Infinity, precio: 285.13 }
+  ]
+},
+
+N2: {
+  cargoFijo: 4934.06,
+  bloques: [
+    { limite: 200, precio: 97.76 },
+    { limite: 300, precio: 122.42 },
+    { limite: 500, precio: 155.78 },
+    { limite: 740, precio: 183.48 },
+    { limite: Infinity, precio: 285.13 }
+  ]
+},
+
+N3: {
+  cargoFijo: 5249.00,
+  bloques: [
+    { limite: 200, precio: 100.90 },
+    { limite: 300, precio: 127.14 },
+    { limite: 500, precio: 162.62 },
+    { limite: 740, precio: 183.48 },
+    { limite: Infinity, precio: 285.13 }
+  ]
+}
+
+};
+
+function calcular() {
+
+  const cat = document.getElementById("categoria").value;
+  let consumo = parseFloat(document.getElementById("consumo").value) || 0;
+
+  let restante = consumo;
+  let totalVariable = 0;
+  let limiteAnterior = 0;
+
+  for (let bloque of tarifas[cat].bloques) {
+
+    if (restante <= 0) break;
+
+    let rango = bloque.limite - limiteAnterior;
+    let energiaEnBloque = Math.min(restante, rango);
+
+    totalVariable += energiaEnBloque * bloque.precio;
+
+    restante -= energiaEnBloque;
+    limiteAnterior = bloque.limite;
+  }
+
+  let total = tarifas[cat].cargoFijo + totalVariable;
+
+  document.getElementById("resultado").innerHTML =
+    `Cargo fijo: $${tarifas[cat].cargoFijo.toFixed(2)}<br>
+     Cargo variable: $${totalVariable.toFixed(2)}<br>
+     <hr>
+     TOTAL ESTIMADO BIMESTRAL: $${total.toFixed(2)} ARS`;
+}
+
+</script>
+
+</body>
+</html>
