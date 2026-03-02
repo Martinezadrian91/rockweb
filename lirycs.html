@@ -74,35 +74,22 @@
             display: none;
         }
 		 
-		
+	
     </style>
   
    
 
 <script>
-    function toggleCajas() {
-        var cajas = document.querySelectorAll('.caja');
-        var mostrarButton = document.getElementById('mostrar-button');
-        var ocultarButton = document.getElementById('ocultar-button');
+function mostrarFlash(id) {
+    // Oculta todos
+    var flashes = document.querySelectorAll('.flash');
+    flashes.forEach(function(flash) {
+        flash.style.display = 'none';
+    });
 
-        var algunoOculto = Array.from(cajas).some(caja => caja.style.display === 'none' || caja.style.display === '');
-
-        cajas.forEach(function(caja) {
-            if (algunoOculto) {
-                caja.style.display = 'block';
-            } else {
-                caja.style.display = 'none';
-            }
-        });
-
-        if (algunoOculto) {
-            mostrarButton.style.display = 'none';
-            ocultarButton.style.display = 'inline-block';
-        } else {
-            mostrarButton.style.display = 'inline-block';
-            ocultarButton.style.display = 'none';
-        }
-    }
+    // Muestra el seleccionado
+    document.getElementById(id).style.display = 'block';
+}
 </script>
 
  
@@ -112,20 +99,20 @@
 
 
 <body>
-    <div class="menu">
-      
-		<a href="https://martinezadrian91.github.io/rockweb/">volver</a>
-	     <a  id="mostrar-button" onclick="toggleCajas()">Flash 1</a>
-        <a  id="ocultar-button" onclick="toggleCajas()" style="display: none;">Flash 1</a>
-<a href="https://martinezadrian91.github.io/rockweb/lirycs2.html">Flash 2</a>
-       <a href="https://martinezadrian91.github.io/rockweb/lirycs3.html">Flash 3</a>
-		<a href="https://martinezadrian91.github.io/rockweb/lirycs4.html">Flash 4</a>
-    </div>
-
+<div class="menu">
+	<a href="https://martinezadrian91.github.io/rockweb/">volver</a>
+    <a onclick="mostrarFlash('flash1')">Flash 1</a>
+    <a onclick="mostrarFlash('flash2')">Flash 2</a>
+    <a onclick="mostrarFlash('flash3')">Flash 3</a>
+    <a onclick="mostrarFlash('flash4')">Flash 4</a>
+	<a onclick="mostrarFlash('flash5')">Flash 5</a>
+	<a onclick="mostrarFlash('flash6')">Flash 6</a>
+</div>
 	
-    <div class="content">
-	<div class="caja oculto">
-        <h1>Flash 1</h1>
+<div class="content">
+
+    <div id="flash1" class="flash" style="display:none;">
+               <h1>Flash 1</h1>
        
         <!-- Aquí puedes agregar más contenido -->
 		
@@ -170,90 +157,165 @@ Lo mejor es que fue real
 <br>
 
 </h3>
-
-</div>		
-		
     </div>
-   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
-    import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js';
 
-    // 🔧 Configuración de Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyBPZPPUt72C5MUm1WBbL9udLENeUnaj6Oc",
-        authDomain: "registros-29b03.firebaseapp.com",
-        databaseURL: "https://registros-29b03-default-rtdb.firebaseio.com",
-        projectId: "registros-29b03",
-        storageBucket: "registros-29b03.firebasestorage.app",
-        messagingSenderId: "441228504173",
-        appId: "1:441228504173:web:5d991bf1642ddb9b88a364",
-        measurementId: "G-X5YR7X2SWH"
-    };
+    <div id="flash2" class="flash" style="display:none;">
+        <h1>Flash 2</h1>
+       
+        <!-- Aquí puedes agregar más contenido -->
+		
+	<h3>
+	Como sigue esa historia 
+	<br>
+Cuando tiran a matar<br>
+Hoy te siguen otras sombras<br>
+Nuevas formas de pensar <br><br>
 
-    // 🔥 Inicializa Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+Ser así, no es normal.<br>
+Un juego fue infantil <br>
+Y otro daño a la moral.<br>
+Te tuviste que reir<br>
+No querias quedar mal.<br>
+Aunque te pudiera herir<br>
+Lo intentas disimular.<br><br>
 
-    // 🧠 Genera un identificador anónimo para el visitante
-    const idVisitante = localStorage.getItem('visitanteID') || crypto.randomUUID();
-    localStorage.setItem('visitanteID', idVisitante);
+Te toma por sorpresa<br>
+Una mediada cautelar <br>
+El acuerdo de promesa <br>
+Pone precio a la amistad<br><br>
 
-    let tiempoInicio = Date.now();
-    let contadorDeClicks = 0;
-    document.addEventListener('click', () => contadorDeClicks++);
+O cazas o sos la presa<br>
+el lema impone autoridad<br>
+lo que esta sobre la mesa<br>
+define cómo es la verdad<br><br>
 
-    // 🌐 Obtener IP y datos de ubicación
-    async function obtenerIPyGeo() {
-        try {
-            const r = await fetch('https://ipapi.co/json/');
-            if (!r.ok) throw new Error('Respuesta no OK desde ipapi: ' + r.status);
-            const j = await r.json();
-            return j;
-        } catch (e) {
-            console.warn('No fue posible obtener IP/geo:', e);
-            return { ip: 'Desconocida', city: '', region: '', country_name: '' };
-        }
-    }
+Cuando el pibe no razona<br>
+Eso empieza a hacerte mal<br>
+era actor de una persona <br>
+para poderte conquistar <br>
 
-    // 📊 Registrar sesión completa (datos técnicos + IP)
-    async function registrarSesion() {
-        try {
-            const datosIP = await obtenerIPyGeo();
-            const duracionSegundos = Math.round((Date.now() - tiempoInicio) / 1000);
+</h3>
+    </div>
 
-            const datos = {
-                idVisitante,
-                timestamp: new Date().toISOString(),
-                url: window.location.href,
-                idioma: navigator.language,
-                dispositivo: navigator.platform,
-                resolucion: `${window.screen.width}x${window.screen.height}`,
-                referrer: document.referrer || 'Directo',
-                clicks: contadorDeClicks,
-                tiempoEnPagina: duracionSegundos,
-                ip: datosIP.ip || 'Desconocida',
-                pais: datosIP.country_name || 'Desconocido',
-                region: datosIP.region || '',
-                ciudad: datosIP.city || ''
-            };
-
-            const referencia = ref(db, 'visitas_letrs/' + Date.now());
-            await set(referencia, datos);
-            console.log('✅ Sesión privada registrada en Firebase:', datos);
-        } catch (error) {
-            console.error('Error al registrar sesión:', error);
-        }
-    }
-
-    // 🚀 Registrar automáticamente unos segundos después de cargar
-    window.addEventListener('load', () => {
-        setTimeout(registrarSesion, 3000);
-    });
-</script>
+    <div id="flash3" class="flash" style="display:none;">
+        <h1>Flash 3</h1>
+       
+        <!-- Aquí puedes agregar más contenido -->
+		
+	<h3>
+en dos copas pidien risas<br>
+porque ella olfateo su sed<br>
+en un trato que firmo con tiza<br>
+juro eternos que borro despues <br><br>
  
+cuando el destino no perdona<br>
+Y la presa devora al cazador<br>
+no es la fe la que traiciona<br>
+siendo fiel a la oracion<br><br>
 
-</body>
+No es por ahí <br>
+No hay dias para reir<br>
+Ni tiempo de llorar  <br>
+una hora no es vivír<br>
+y ser no es solo estar<br><br>
+
+una tarde no se va<br>
+Un recuerdo no es historia <br>
+Todo el mundo es un hogar<br>
+Y todo el suelo es memoria <br><br>
+
+
+Dios de tantos soñadores <br>
+En este espacio sin lugar<br>
+Donde juegan los traidores<br>
+No te olvides de rezar<br><br>
+
+
+</h3>
+    </div>
+
+    <div id="flash4" class="flash" style="display:none;">
+  <h1>Flash 4</h1>
+       
+        <!-- Aquí puedes agregar más contenido -->
+		
+	<h3>
+	Con tanta gente alrededor 
+	<br>
+...¿Te sentiste sola?<br>
+Como un chiste sin humor<br>
+que pasó de moda<br><br>
+
+Cuando perdiste el corazón <br>
+¿Eras mejor persona?<br>
+Todo el espacio del mundo <br>
+nunca alcanza,<br>
+si la vida en un segundo<br>
+te quitó confianza <br><br>
+
+Ningún lugar será seguro,<br>
+Ni tu propia casa.<br>
+Cuando el día más oscuro <br>
+se vistió de farsa.
+<br><br>
+
+todo te amenaza.<br>
+Socializar detrás de un muro<br>
+Es lo que te cansa.<br><br>
+
+las grietas también son ventanas<br>
+donde la luz suele entrar.<br>
+no toda expriencia es mala<br>
+a veces pueden enseñar. <br>
+
+</h3>
+    </div>
+	    <div id="flash5" class="flash" style="display:none;">
+        <h2>Elegía de la Razón Predadora</h2>
+        
+<h3>
+Se nos prometió que el albedrío era la impronta de nuestra libertad,<br>
+ ahora somos preso de la misma duda bajo el cargo de pensar para ser libres. <br>
+Que el raciocinio trazaba la frontera con la bestia,<br>
+ aunque por mucho pensar se razone igual que un animal.<br> 
+Somos la cúspide erigiéndonos como el cenit de vida, <br>
+el milagro de la vigilia consciente.<br>
+ Otra de las tantas Falacias sedantes<br>
+ para perpetuar la masacre bajo el velo de la templanza,<br>
+ otra excusa cómoda para seguir matando en paz.<br>
+¿Qué naturaleza tiene esa inteligencia <br>
+de abyección ajena para ungir sus triunfos, <br>
+que dirime la inanición del indigente mediante el exterminio,<br>
+ y denomina apogeo a la inhumación de sus propios escombros?<br><br>
+"sin derrotas no hay victorias"<br><br>
+O acaso la tesis sea más elemental: <br>
+despojar del atributo de "inteligencia" <br>
+a lo que no es sino el hábito consuetudinario<br>
+ de subsistir a gastos de la alteridad absoluta.<br>
+ </h3>
+
+    </div>
+	    <div id="flash6" class="flash" style="display:none;">
+        <h2>El Trágico Bucle de la Estirpe</h2>
+<h3>
+Vencimos el pavor, la profunda herida,<br>
+ y en el cruento matar de cada día, <br>
+ hallamos la primordial monotonía<br>
+ de dar la muerte para conservar la vida.<br><br>
+Que miedo! si Dios, con voz de ley un día,<br>
+ nos dicta que en la infame saña fría <br>
+ reside nuestra única energía <br>
+ y que sin su odio la raza está perdida.<br><br>
+Que Pavor! que el tiempo nos recuerde<br>
+ en la misma edad de piedra, en la bajeza, <br>
+ en la etapa de mayor torpeza.<br><br>
+Pues si el presente no despierta al hombre,<br>
+ será el mañana un eco del pasado:<br>
+ el círculo de yerros como limite trazado.<br>
+ </h3>
+    </div>
+
+</div>
+	</body>
 
 </html>
-
-
