@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Visualizador de Visitantes</title>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Firebase SDK (modular) -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBPZPPUt72C5MUm1WBbL9udLENeUnaj6Oc",
+  authDomain: "registros-29b03.firebaseapp.com",
+  databaseURL: "https://registros-29b03-default-rtdb.firebaseio.com",
+  projectId: "registros-29b03",
+  storageBucket: "registros-29b03.appspot.com",
+  messagingSenderId: "441228504173",
+  appId: "1:441228504173:web:5d991bf1642ddb9b88a364"
+};
+
+// Inicializar
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const visitasRef = ref(db, "sesiones_privadas");
+
+// GLOBAL
+let datosGlobales = [];
+
+// Leer Firebase
+onValue(visitasRef, snapshot => {
+    const data = snapshot.val() || {};
+    datosGlobales = Object.entries(data).map(([id, value]) => ({
+        id,
+        ...value
+    }));
+    actualizarTodo();
+});
+
+// ACTUALIZAR
+function actualizarTodo() {
+    llenarFiltros();
+    generarTabla();
+    generarGraficos();
+}
+
+function borrarRegistro(id) {
+    if (confirm("¿Eliminar este registro?")) {
+        remove(ref(db, "sesiones_privadas/" + id));
+    }
+}
+
+// Exponer para el botón en HTML
+window.borrarRegistro = borrarRegistro;
+
+
+// ----------------- FILTROS -----------------
+function llenarFiltros() {
+    const paisSelect = document.getElementById("filtroPais");
+    const ciudadSelect = document.getElementById("filtroCiudad");
+
+    const paises = [...new Set(datosGlobales.map(d => d.pais).filter(Boolean))];
+    const ciudades = [...new Set(datosGlobales.map(d => d.ciudad).filter(Boolean))];
+
+    paisSelect.innerHTML = `<option value="">Todos los países</option>` + paises.map(p => `<option>${p}</option>`).join("");
+    ciudadSelect.innerHTML = `<option value="">Todas las ciudades</option>` + ciudades.map(c => `<option>${c}</option>`).join("");
+
+    paisSelect.onchange = generarTabla;
+    ciudadSelect.onchange = generarTabla;
+}
+
+// ----------------- TABLA -----------------
+function generarTabla() {
+    const paisFiltro = document.getElementById("filtroPais").value;
+    const ciudadFiltro = document.getElementById("filtroCiudad").value;
+
+    const cuerpo = document.querySelector("#tablaDatos tbody");
+    cuerpo.innerHTML = "";
+
+    datosGlobales
+        .filter(d =>
+            (!paisFiltro || d.pais === paisFiltro) &&
+            (!ciudadFiltro || d.ciudad === ciudadFiltro)
+        )
+        .forEach(d => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${new Date(d.timestamp).toLocaleString().split(", ")[0]}<br>${new Date(d.timestamp).toLocaleString().split(", ")[1]}</td>
+                <td class="url">${d.url}</td>
+				 <td class="ref">${d.referrer || "Directo"}</td> 
+                <td>${d.idioma}</td>
+                <td>${d.dispositivo}</td>
+                <td>${d.resolucion}</td>
+                <td>${d.pais}</td>
+                <td>${d.ciudad}</td>
+                <td>${d.clicks}</td>
+                <td>${d.tiempoEnPagina}</td>
+                <td>${d.ip}</td>
+                <td><button onclick="borrarRegistro('${d.id}')">🗑️</button></td>
+            `;
+            cuerpo.appendChild(tr);
+        });
+}
+
+// ----------------- GRÁFICOS -----------------
+let chartPaises, chartDispositivos, chartHoras;
+
+function generarGraficos() {
+    const paises = contar("pais");
+    const dispositivos = contar("dispositivo");
+    const horas = contarHora();
+
+    if (chartPaises) chartPaises.destroy();
+    if (chartDispositivos) chartDispositivos.destroy();
+    if (chartHoras) chartHoras.destroy();
+
+    chartPaises = new Chart(document.getElementById("graficoPaises"), {
+        type: "bar",
+        data: { labels: Object.keys(paises), datasets: [{ data: Object.values(paises) }] }
+    });
+
+    chartDispositivos = new Chart(document.getElementById("graficoDispositivos"), {
+        type: "pie",
+        data: {
+            labels: Object.keys(dispositivos),
+            datasets: [{ label: "Dispositivos", data: Object.values(dispositivos) }]
+        }
+    });
+
+    chartHoras = new Chart(document.getElementById("graficoHoras"), {
+        type: "line",
+        data: { labels: Object.keys(horas), datasets: [{ data: Object.values(horas) }] }
+    });
+}
+
+function contar(campo) {
+    const obj = {};
+    datosGlobales.forEach(d => {
+        obj[d[campo]] = (obj[d[campo]] || 0) + 1;
+    });
+    return obj;
+}
+
+function contarHora() {
+    const obj = {};
+    datosGlobales.forEach(d => {
+        const h = new Date(d.timestamp).getHours();
+        obj[h] = (obj[h] || 0) + 1;
+    });
+    return obj;
+}
+</script>
+
+<style>
+body {
+    font-family: Arial;
+    background: #111;
+    color: #eee;
+    padding: 20px;
+}
+
+/* Filtros */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+.filters select {
+    padding: 6px;
+    font-size: 14px;
+}
+
+/* Tarjetas (graficos) */
+.card canvas {
+    max-width: 500px;
+    max-height: 280px;
+    margin: 0 auto;
+}
+.card {
+    background: #1a1a1a;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Tabla responsiva */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; /* más compacto */
+}
+table, th, td {
+    border: 1px solid #444;
+}
+th, td {
+    padding: 6px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+td.url, td.ref {
+    word-break: break-all;
+    white-space: normal;
+    max-width: 220px;
+}
+
+
+
+/* cortar columnas largas */
+td:nth-child(2) { max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+td:nth-child(10) { max-width: 85px; }
+
+td:nth-child(3),
+td:nth-child(4),
+td:nth-child(5) {
+    max-width: 100px;
+}
+
+@media (max-width: 600px) {
+    th, td {
+        font-size: 12px;
+        padding: 5px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>Visualizador de Visitantes</h1>
+
+<div class="filters">
+    <select id="filtroPais"><option value="">Todos los países</option></select>
+    <select id="filtroCiudad"><option value="">Todas las ciudades</option></select>
+</div>
+<div class="table-container">
+<table id="tablaDatos">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>URL</th>
+			<th>Referrer</th>
+            <th>Idioma</th>
+            <th>Dispositivo</th>
+            <th>Resolución</th>
+            <th>Pais</th>
+            <th>Ciudad</th>
+            <th>Clicks</th>
+            <th>Tiempo (s)</th>
+            <th>IP</th>
+            <th>Borrar</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+</div>
+<div class="card"><canvas id="graficoPaises"></canvas></div>
+<div class="card"><canvas id="graficoDispositivos"></canvas></div>
+<div class="card"><canvas id="graficoHoras"></canvas></div>
+
+
+
+</body>
+</html>
