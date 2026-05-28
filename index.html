@@ -62,6 +62,9 @@
         <a href="https://drive.google.com/file/d/1BgjvtN59IbwwHHgU2mRlVsceWEfpDVgF/view?usp=sharing">Parche</a>
         <a href="lirycs.html">letras</a>
 <a href="minilab.html">Mini Lab</a>
+        <button onclick="verificarPassword()">
+    Entrar
+</button>
        
     </div>
 
@@ -156,6 +159,22 @@
             return notas[nombre] || [];
         }
     </script>
+    <script>
+function verificarPassword() {
+
+    var password = prompt("Ingresá la contraseña:");
+
+    if(password === "1234") {
+
+        window.location.href = "https://google.com";
+
+    } else {
+
+        alert("Contraseña incorrecta");
+
+    }
+}
+</script>
 </body>
 </html>
 
