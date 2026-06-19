@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>⚽ Alerta de Goles - Mundial 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0e1a;
+            color: #f0f4ff;
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 720px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            padding: 20px 0 8px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #facc15, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 16px;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111827;
+            border-radius: 12px;
+            padding: 10px 16px;
+            margin-bottom: 16px;
+            border: 1px solid #1e293b;
+            font-size: 13px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+            background: #22c55e;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .status-dot.idle {
+            background: #64748b;
+            animation: none;
+        }
+
+        .status-dot.error {
+            background: #ef4444;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.4;
+                transform: scale(0.85);
+            }
+        }
+
+        .match-card {
+            background: #111827;
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 12px;
+            border: 1px solid #1e293b;
+            transition: all 0.2s;
+        }
+
+        .match-card.goal-flash {
+            border-color: #facc15;
+            background: #1a2332;
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.15);
+        }
+
+        .match-teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .team {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .team.away {
+            justify-content: flex-end;
+        }
+
+        .team-flag {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .team-name {
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .score {
+            font-size: 26px;
+            font-weight: 800;
+            padding: 0 12px;
+            color: #facc15;
+            min-width: 48px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .match-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #94a3b8;
+            border-top: 1px solid #1e293b;
+            padding-top: 10px;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .match-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-badge {
+            background: #1e293b;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .status-badge.live {
+            background: #dc2626;
+            color: #fff;
+            animation: pulse-badge 1.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .goal-indicator {
+            color: #facc15;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .goal-indicator .icon {
+            font-size: 18px;
+        }
+
+        .no-matches {
+            text-align: center;
+            padding: 48px 20px;
+            color: #64748b;
+        }
+
+        .no-matches .big-icon {
+            font-size: 56px;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .notification-permission {
+            text-align: center;
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-permission {
+            background: #3b82f6;
+            border: none;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            touch-action: manipulation;
+        }
+
+        .btn-permission:hover {
+            background: #2563eb;
+        }
+
+        .btn-permission:active {
+            transform: scale(0.96);
+        }
+
+        .btn-permission.granted {
+            background: #22c55e;
+        }
+
+        .footer {
+            margin-top: 24px;
+            font-size: 11px;
+            color: #475569;
+            text-align: center;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0e1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="app">
+        <h1>⚽ Alerta de Goles</h1>
+        <p class="subtitle">Mundial 2026 — Fase de Grupos</p>
+
+        <!-- Barra de estado -->
+        <div class="status-bar">
+            <span>
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Conectando...</span>
+            </span>
+            <span id="lastUpdate">--:--:--</span>
+        </div>
+
+        <!-- Permiso de notificaciones -->
+        <div class="notification-permission" id="notifBanner">
+            <span>🔔 Recibe alertas en tu dispositivo</span>
+            <button class="btn-permission" id="notifBtn">Activar notificaciones</button>
+        </div>
+
+        <!-- Lista de partidos -->
+        <div id="matchesContainer">
+            <div class="no-matches">
+                <span class="big-icon">⏳</span>
+                <p>Cargando partidos del día...</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            Datos en tiempo real vía ESPN &bull; Actualización cada 5 segundos
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ---- CONFIGURACIÓN ----
+            const POLL_INTERVAL_MS = 5000;
+            const ESPN_API_URL =
+                'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard';
+            // Proxy CORS público (fallback para iOS Safari)
+            const CORS_PROXY_URL = 'https://api.allorigins.win/raw?url=';
+
+            // ---- ESTADO ----
+            let previousMatches = {};
+            let notificationGranted = false;
+            let audioContext = null;
+            let isPlayingSiren = false;
+            let pollTimer = null;
+            let retryCount = 0;
+
+            // ---- DOM REFS ----
+            const container = document.getElementById('matchesContainer');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const lastUpdateEl = document.getElementById('lastUpdate');
+            const notifBanner = document.getElementById('notifBanner');
+            const notifBtn = document.getElementById('notifBtn');
+
+            // ---- SONIDO: SIRENA ----
+            function createSirenSound() {
+                try {
+                    if (!audioContext) {
+                        audioContext = new(window.AudioContext || window.webkitAudioContext)();
+                    }
+                    if (audioContext.state === 'suspended') {
+                        audioContext.resume();
+                    }
+
+                    const duration = 3.2;
+                    const sampleRate = audioContext.sampleRate;
+                    const bufferSize = Math.floor(sampleRate * duration);
+                    const buffer = audioContext.createBuffer(1, bufferSize, sampleRate);
+                    const data = buffer.getChannelData(0);
+
+                    const baseFreq = 440;
+                    const modFreq = 2.8;
+                    const sweepDepth = 220;
+
+                    for (let i = 0; i < bufferSize; i++) {
+                        const t = i / sampleRate;
+                        const freq = baseFreq + sweepDepth * Math.sin(2 * Math.PI * modFreq * t);
+                        const env = Math.min(1, t * 8) * (1 - t / duration * 0.7);
+                        data[i] = Math.sin(2 * Math.PI * freq * t) * env * 0.6;
+                    }
+                    return buffer;
+                } catch (e) {
+                    console.warn('Error generando sirena:', e);
+                    return null;
+                }
+            }
+
+            function playSiren() {
+                if (isPlayingSiren) return;
+                try {
+                    const buffer = createSirenSound();
+                    if (!buffer) return;
+
+                    if (!audioContext) {
+                        audioContext = new(window.AudioContext || window.webkitAudioContext)();
+                    }
+                    if (audioContext.state === 'suspended') {
+                        audioContext.resume();
+                    }
+
+                    const source = audioContext.createBufferSource();
+                    source.buffer = buffer;
+                    const gain = audioContext.createGain();
+                    gain.gain.value = 0.7;
+                    source.connect(gain);
+                    gain.connect(audioContext.destination);
+                    source.start(0);
+                    isPlayingSiren = true;
+                    source.onended = function() {
+                        isPlayingSiren = false;
+                    };
+                    setTimeout(() => { isPlayingSiren = false; }, 4000);
+                } catch (e) {
+                    console.warn('Error reproduciendo sirena:', e);
+                    isPlayingSiren = false;
+                }
+            }
+
+            // ---- NOTIFICACIONES ----
+            function requestNotificationPermission() {
+                if (!('Notification' in window)) {
+                    alert('Tu navegador no soporta notificaciones.');
+                    return;
+                }
+                if (Notification.permission === 'granted') {
+                    notificationGranted = true;
+                    updateNotifBanner();
+                    return;
+                }
+                if (Notification.permission === 'denied') {
+                    alert('Las notificaciones están bloqueadas. Actívalas desde la configuración de tu navegador.');
+                    return;
+                }
+                Notification.requestPermission().then(function(perm) {
+                    notificationGranted = (perm === 'granted');
+                    updateNotifBanner();
+                    if (notificationGranted) {
+                        new Notification('✅ Alertas activadas', {
+                            body: 'Recibirás una alerta cada vez que haya un gol.',
+                            icon: '⚽'
+                        });
+                    }
+                });
+            }
+
+            function sendGoalNotification(homeTeam, awayTeam, homeScore, awayScore, minute, scorer) {
+                if (!notificationGranted) return;
+                try {
+                    const title = `⚽ ¡GOL! ${homeTeam} ${homeScore} - ${awayScore} ${awayTeam}`;
+                    const body = scorer ?
+                        `Gol de ${scorer} al minuto ${minute || '?'}` :
+                        `¡Gol al minuto ${minute || '?'}!`;
+                    new Notification(title, { body, icon: '⚽' });
+                } catch (e) { /* silencioso */ }
+            }
+
+            function updateNotifBanner() {
+                if (notificationGranted) {
+                    notifBanner.style.display = 'none';
+                } else {
+                    notifBanner.style.display = 'flex';
+                    if (Notification.permission === 'denied') {
+                        notifBtn.textContent = '🔒 Bloqueadas';
+                        notifBtn.disabled = true;
+                        notifBtn.style.opacity = '0.5';
+                    } else {
+                        notifBtn.textContent = '🔔 Activar notificaciones';
+                        notifBtn.disabled = false;
+                        notifBtn.style.opacity = '1';
+                    }
+                }
+            }
+
+            // ---- AUXILIARES ----
+            function getFlagEmoji(countryCode) {
+                const map = {
+                    'USA': '🇺🇸', 'AUS': '🇦🇺', 'MEX': '🇲🇽', 'CAN': '🇨🇦',
+                    'ARG': '🇦🇷', 'BRA': '🇧🇷', 'ENG': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'FRA': '🇫🇷',
+                    'GER': '🇩🇪', 'ITA': '🇮🇹', 'ESP': '🇪🇸', 'NED': '🇳🇱',
+                    'POR': '🇵🇹', 'BEL': '🇧🇪', 'URU': '🇺🇾', 'COL': '🇨🇴',
+                    'CHI': '🇨🇱', 'PER': '🇵🇪', 'JPN': '🇯🇵', 'KOR': '🇰🇷',
+                    'IRN': '🇮🇷', 'KSA': '🇸🇦', 'NGA': '🇳🇬', 'SEN': '🇸🇳',
+                    'CMR': '🇨🇲', 'GHA': '🇬🇭', 'MAR': '🇲🇦', 'TUN': '🇹🇳',
+                    'ALG': '🇩🇿', 'EGY': '🇪🇬', 'CRC': '🇨🇷', 'PAN': '🇵🇦',
+                    'ECU': '🇪🇨', 'VEN': '🇻🇪', 'PAR': '🇵🇾', 'BOL': '🇧🇴',
+                    'NZL': '🇳🇿', 'UKR': '🇺🇦', 'POL': '🇵🇱', 'CRO': '🇭🇷',
+                    'DEN': '🇩🇰', 'SWE': '🇸🇪', 'SUI': '🇨🇭', 'AUT': '🇦🇹',
+                    'CZE': '🇨🇿', 'HUN': '🇭🇺', 'ROU': '🇷🇴', 'SRB': '🇷🇸',
+                    'TUR': '🇹🇷', 'RUS': '🇷🇺', 'WAL': '🏴󠁧󠁢󠁷󠁬󠁳󠁿', 'SCO': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+                    'NIR': '🇬🇧', 'SVN': '🇸🇮', 'SVK': '🇸🇰', 'GEO': '🇬🇪'
+                };
+                return map[countryCode.toUpperCase()] || '🏳️';
+            }
+
+            function getTeamDisplay(teamObj) {
+                if (!teamObj) return { name: '??', flag: '🏳️' };
+                const name = teamObj.displayName || teamObj.name || '??';
+                const code = teamObj.abbreviation || '';
+                return { name: name, flag: getFlagEmoji(code) };
+            }
+
+            function formatTime(dateStr) {
+                try {
+                    const d = new Date(dateStr);
+                    return d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                } catch { return '--:--:--'; }
+            }
+
+            // ---- FETCH CON FALLBACK PARA SAFARI ----
+            async function fetchDataWithFallback() {
+                // 1. Intento directo
+                try {
+                    const directUrl = `${ESPN_API_URL}?cache=${Date.now()}`;
+                    console.log('[Direct] Intentando cargar:', directUrl);
+                    const response = await fetch(directUrl, {
+                        headers: { 'Accept': 'application/json' },
+                        cache: 'no-cache',
+                        redirect: 'follow'
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                    const data = await response.json();
+                    // Si tiene eventos y no está vacío, lo devolvemos
+                    if (data && data.events && data.events.length > 0) {
+                        console.log('[Direct] Éxito, partidos encontrados:', data.events.length);
+                        return data;
+                    } else {
+                        console.log('[Direct] Sin eventos o vacío, probando proxy...');
+                        throw new Error('No events in direct response');
+                    }
+                } catch (directErr) {
+                    console.warn('[Direct] Falló:', directErr.message);
+
+                    // 2. Fallback con proxy CORS
+                    try {
+                        const proxyUrl = `${CORS_PROXY_URL}${encodeURIComponent(ESPN_API_URL + '?cache=' + Date.now())}`;
+                        console.log('[Proxy] Intentando cargar:', proxyUrl);
+                        const proxyResponse = await fetch(proxyUrl, {
+                            headers: { 'Accept': 'application/json' },
+                            cache: 'no-cache'
+                        });
+
+                        if (!proxyResponse.ok) throw new Error(`Proxy HTTP ${proxyResponse.status}`);
+
+                        const proxyData = await proxyResponse.json();
+                        if (proxyData && proxyData.events && proxyData.events.length > 0) {
+                            console.log('[Proxy] Éxito, partidos encontrados:', proxyData.events.length);
+                            return proxyData;
+                        } else {
+                            console.warn('[Proxy] Respuesta sin eventos.');
+                            return null;
+                        }
+                    } catch (proxyErr) {
+                        console.warn('[Proxy] Falló:', proxyErr.message);
+                        return null;
+                    }
+                }
+            }
+
+            // ---- PROCESAMIENTO ----
+            function processMatches(data) {
+                if (!data || !data.events) {
+                    return { matches: [], liveCount: 0 };
+                }
+
+                const matches = [];
+                let liveCount = 0;
+
+                for (const event of data.events) {
+                    const comp = event.competitions && event.competitions[0];
+                    if (!comp) continue;
+
+                    const status = comp.status || {};
+                    const statusType = status.type || {};
+                    const isLive = (statusType.state === 'in' || statusType.state === 'pre');
+                    const isFinished = (statusType.state === 'post');
+                    const displayClock = status.displayClock || '';
+
+                    const competitors = comp.competitors || [];
+                    let home = null,
+                        away = null;
+                    let homeScore = 0,
+                        awayScore = 0;
+                    for (const c of competitors) {
+                        if (c.homeAway === 'home') {
+                            home = c;
+                            homeScore = parseInt(c.score) || 0;
+                        } else if (c.homeAway === 'away') {
+                            away = c;
+                            awayScore = parseInt(c.score) || 0;
+                        }
+                    }
+                    if (!home || !away) continue;
+
+                    const homeInfo = getTeamDisplay(home.team);
+                    const awayInfo = getTeamDisplay(away.team);
+
+                    const details = comp.details || [];
+                    const goals = [];
+                    for (const d of details) {
+                        if (d.scoringPlay === true && d.type && d.type.text) {
+                            const goalText = d.type.text || 'Gol';
+                            const minute = d.clock && d.clock.displayValue ? d.clock.displayValue : '';
+                            const scorer = d.athletesInvolved && d.athletesInvolved.length > 0 ?
+                                d.athletesInvolved[0].displayName || '' :
+                                '';
+                            goals.push({
+                                text: goalText,
+                                minute: minute,
+                                scorer: scorer,
+                                teamId: d.team ? d.team.id : null,
+                                isOwnGoal: d.ownGoal || false
+                            });
+                        }
+                    }
+
+                    matches.push({
+                        id: event.id,
+                        homeName: homeInfo.name,
+                        homeFlag: homeInfo.flag,
+                        awayName: awayInfo.name,
+                        awayFlag: awayInfo.flag,
+                        homeScore: homeScore,
+                        awayScore: awayScore,
+                        status: statusType.shortDetail || statusType.description || 'En vivo',
+                        isLive: isLive,
+                        isFinished: isFinished,
+                        clock: displayClock,
+                        goals: goals,
+                        rawEvent: event,
+                        rawComp: comp
+                    });
+
+                    if (isLive) liveCount++;
+                }
+
+                return { matches, liveCount };
+            }
+
+            // ---- DETECCIÓN DE GOLES ----
+            function detectGoals(currentMatches) {
+                const newGoals = [];
+
+                for (const match of currentMatches) {
+                    const prev = previousMatches[match.id];
+                    if (!prev) continue;
+
+                    if (match.homeScore !== prev.homeScore || match.awayScore !== prev.awayScore) {
+                        let scorer = '';
+                        let minute = match.clock || '';
+
+                        if (match.goals && match.goals.length > 0) {
+                            const lastGoal = match.goals[match.goals.length - 1];
+                            const prevGoalIds = new Set();
+                            if (prev.goals) {
+                                for (const g of prev.goals) {
+                                    prevGoalIds.add(g.text + g.minute + g.scorer);
+                                }
+                            }
+                            const goalKey = lastGoal.text + lastGoal.minute + lastGoal.scorer;
+                            if (!prevGoalIds.has(goalKey)) {
+                                scorer = lastGoal.scorer || '';
+                                minute = lastGoal.minute || minute;
+                            } else {
+                                if (match.homeScore > prev.homeScore) scorer = match.homeName;
+                                else if (match.awayScore > prev.awayScore) scorer = match.awayName;
+                            }
+                        } else {
+                            if (match.homeScore > prev.homeScore) scorer = match.homeName;
+                            else if (match.awayScore > prev.awayScore) scorer = match.awayName;
+                        }
+
+                        newGoals.push({
+                            matchId: match.id,
+                            homeTeam: match.homeName,
+                            awayTeam: match.awayName,
+                            homeScore: match.homeScore,
+                            awayScore: match.awayScore,
+                            minute: minute,
+                            scorer: scorer
+                        });
+                    }
+                }
+
+                return newGoals;
+            }
+
+            // ---- RENDER ----
+            function renderMatches(matches, liveCount) {
+                if (!matches || matches.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-matches">
+                            <span class="big-icon">⚽</span>
+                            <p>No hay partidos programados para hoy.</p>
+                            <p style="font-size:13px; margin-top:8px;">Revisa de nuevo más tarde.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                for (const m of matches) {
+                    const statusClass = m.isLive ? 'live' : '';
+                    const statusLabel = m.isLive ? 'EN VIVO' : (m.isFinished ? 'FINALIZADO' : m.status);
+
+                    html += `
+                        <div class="match-card" id="match-${m.id}">
+                            <div class="match-teams">
+                                <div class="team home">
+                                    <span class="team-flag">${m.homeFlag}</span>
+                                    <span class="team-name">${m.homeName}</span>
+                                </div>
+                                <div class="score">${m.homeScore} - ${m.awayScore}</div>
+                                <div class="team away">
+                                    <span class="team-name">${m.awayName}</span>
+                                    <span class="team-flag">${m.awayFlag}</span>
+                                </div>
+                            </div>
+                            <div class="match-meta">
+                                <div class="match-status">
+                                    <span class="status-badge ${statusClass}">${statusLabel}</span>
+                                    ${m.clock ? `<span>⏱️ ${m.clock}</span>` : ''}
+                                </div>
+                                ${m.goals && m.goals.length > 0 ? `
+                                    <div class="goal-indicator">
+                                        <span class="icon">⚽</span>
+                                        ${m.goals.length} gol${m.goals.length > 1 ? 'es' : ''}
+                                        ${m.goals.length > 0 ? '· ' + m.goals[m.goals.length-1].minute : ''}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = html;
+
+                const liveText = liveCount > 0 ? `${liveCount} partido${liveCount > 1 ? 's' : ''} en vivo` : 'Sin partidos en vivo';
+                statusText.textContent = liveText;
+                statusDot.className = 'status-dot' + (liveCount > 0 ? '' : ' idle');
+                lastUpdateEl.textContent = formatTime(new Date().toISOString());
+            }
+
+            // ---- CICLO PRINCIPAL ----
+            async function fetchAndUpdate() {
+                try {
+                    const data = await fetchDataWithFallback();
+
+                    if (!data) {
+                        statusText.textContent = '⚠️ Error al cargar datos';
+                        statusDot.className = 'status-dot error';
+                        retryCount++;
+                        if (retryCount > 3) {
+                            container.innerHTML = `
+                                <div class="no-matches">
+                                    <span class="big-icon">📡</span>
+                                    <p>No se pudo conectar con el servidor.</p>
+                                    <p style="font-size:13px; margin-top:8px;">Reintentando automáticamente...</p>
+                                </div>
+                            `;
+                        }
+                        return;
+                    }
+
+                    retryCount = 0;
+                    const { matches, liveCount } = processMatches(data);
+
+                    const goals = detectGoals(matches);
+
+                    const newPrev = {};
+                    for (const m of matches) {
+                        newPrev[m.id] = {
+                            homeScore: m.homeScore,
+                            awayScore: m.awayScore,
+                            goals: m.goals ? m.goals.map(g => ({ text: g.text, minute: g.minute, scorer: g.scorer })) : []
+                        };
+                    }
+                    previousMatches = newPrev;
+
+                    renderMatches(matches, liveCount);
+
+                    if (goals.length > 0) {
+                        for (const g of goals) {
+                            const match = matches.find(m => m.id === g.matchId);
+                            if (match && !match.isFinished) {
+                                playSiren();
+                                sendGoalNotification(
+                                    g.homeTeam, g.awayTeam,
+                                    g.homeScore, g.awayScore,
+                                    g.minute, g.scorer
+                                );
+                            }
+                        }
+                    }
+
+                    for (const g of goals) {
+                        const el = document.getElementById(`match-${g.matchId}`);
+                        if (el) {
+                            el.classList.add('goal-flash');
+                            setTimeout(() => { el.classList.remove('goal-flash'); }, 3000);
+                        }
+                    }
+
+                } catch (err) {
+                    console.error('Error en ciclo principal:', err);
+                    statusText.textContent = '⚠️ Error inesperado';
+                    statusDot.className = 'status-dot error';
+                }
+            }
+
+            // ---- INICIO ----
+            function init() {
+                if ('Notification' in window) {
+                    notificationGranted = (Notification.permission === 'granted');
+                }
+                updateNotifBanner();
+
+                notifBtn.addEventListener('click', requestNotificationPermission);
+
+                fetchAndUpdate();
+
+                if (pollTimer) clearInterval(pollTimer);
+                pollTimer = setInterval(fetchAndUpdate, POLL_INTERVAL_MS);
+
+                // Resumir audio en iOS/Android al tocar
+                const resumeAudio = function() {
+                    if (audioContext && audioContext.state === 'suspended') {
+                        audioContext.resume();
+                    }
+                };
+                document.addEventListener('touchstart', resumeAudio, { passive: true });
+                document.addEventListener('click', resumeAudio, { passive: true });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
+
+</body>
+</html>
